@@ -1,0 +1,44 @@
+.overlay{
+    position:fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+}
+
+.fade{
+    background:rgba(117, 111, 122, .3);
+    animation: fadeIn 1s ease-in-out;
+}
+
+.popup{
+    width:500px;
+    position:relative;
+    padding: 27px 20px 20px 10px;
+    background: #5c6bc0;
+    border-radius:10px;
+    animation:bounce 1s linear;
+    transform-origin: center bottom;
+}
+.popup-close{
+    color:#fff;
+    position:absolute;
+    top:5px;
+    right:5px;
+}
+.popup-close :hover{
+    cursor: pointer;
+}
+
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+    }
+    to{
+        opacity:1;
+    }
+}
