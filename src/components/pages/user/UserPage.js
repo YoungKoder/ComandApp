@@ -4,20 +4,6 @@ import { Link } from "react-router-dom";
 function UserProfile() {
   return (
     <React.Fragment>
-      <aside>
-        <h3>Logo</h3>
-        <ul>
-          <Link to="/newslist">
-            <li>News</li>
-          </Link>
-          <Link to="/eventslist">
-            <li>Events</li>
-          </Link>
-          <Link to="/userprofile">
-            <li>Profile</li>
-          </Link>
-        </ul>
-      </aside>
       <div>
         <h1>Profile information</h1>
         <form>
