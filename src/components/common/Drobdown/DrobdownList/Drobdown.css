@@ -1,0 +1,28 @@
+
+.drobdown{
+    position: relative;
+    padding:5px 10px;
+    border:1px solid red;
+}
+.drobdown-label{
+    
+}
+
+.drobdown-label:hover{
+    cursor: pointer;
+}
+
+.drobdown-menu{
+    position:absolute;
+    display: flex;
+    justify-content: center;
+    bottom:-40px;
+    padding:5px 0;
+    left:-50px;
+    right:0;
+    border:1px solid red;
+}
+
+.drobdown-menu p {
+    margin-bottom:5px;
+}
