@@ -1,7 +1,16 @@
+*{
+    margin: 0;
+}
 .input {
     margin-bottom: 15px;
 }
-  
+
+.input.input--queue{
+    display: flex;
+    align-items: center;
+}
+
+
 .input label {
 margin-right: 3px;
 padding: 0;
@@ -15,6 +24,11 @@ box-sizing: border-box;
 border: 1px solid #bebebe;
 outline: none;
 transition: all 0.3s ease-in-out;
+margin:3px 0;
+}
+
+.input.input--queue input{
+    margin:0 3px;
 }
 
 .input span {

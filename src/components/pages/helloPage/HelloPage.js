@@ -1,31 +1,27 @@
-// import React, { Component } from "react";
 
-
-
-// export default class HelloPage extends Component {
-//     render(){
-//         return(
-//             <h1>Hello!!</h1>
-//         )
-//     }
-// }
-
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import Button from "../../common/Button/Button";
-
+import Input from "../../common/Input/input";
 
 export default class HelloPage extends Component {
     render(){
         return(
-            <Button 
-                onClick={(e)=>{console.log("it's",e.target)}}
-                state="error"
-                size="lg"
-                variant="outline"
-                >
-                click me!
-            </Button>
+            <Fragment>
+                <Button 
+                    onClick={(e)=>{console.log("it's",e.target)}}
+                    state="error"
+                    size="lg"
+                    variant="outline"
+                    >
+                    click me!
+                </Button>
+                <Input 
+                    label={<p>Label</p>}
+                    valid = {false}
+                    errorMessege = "Error"
+                    />
+            </Fragment>
         )
     }
 }
