@@ -9,6 +9,22 @@
     right:0;
 }
 
+.overlay.overlay--X--left{
+    justify-content: flex-start;
+}
+
+.overlay.overlay--X--right{
+    justify-content: flex-end;
+}
+
+.overlay.overlay--Y--top{
+    align-items:flex-start;
+}
+
+.overlay.overlay--Y--bottom{
+    align-items:flex-end;
+}
+
 .fade{
     background:rgba(117, 111, 122, .3);
     animation: fadeIn 1s ease-in-out;
@@ -20,16 +36,15 @@
     padding: 27px 20px 20px 10px;
     background: #5c6bc0;
     border-radius:10px;
-    animation:bounce 1s linear;
     transform-origin: center bottom;
 }
-.popup-close{
+.popup__close{
     color:#fff;
     position:absolute;
     top:5px;
     right:5px;
 }
-.popup-close :hover{
+.popup__close :hover{
     cursor: pointer;
 }
 
