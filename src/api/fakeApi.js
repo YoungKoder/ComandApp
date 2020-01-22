@@ -16,7 +16,7 @@ const FakeApi = (() => {
      * delay time
      */
     const newPromise = (method) => {
-        const delayMS = 1500;
+        const delayMS = 1000;
 
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -32,7 +32,7 @@ const FakeApi = (() => {
      * JWT API wrapper
      * https://github.com/auth0/node-jsonwebtoken#usage
      */
-    function Token() {
+    const Token = new function() {
         const secretKey = 'evok9nrnbe';
 
         /**
@@ -45,25 +45,20 @@ const FakeApi = (() => {
 
         /**
          * Retrieve token from localStorage
-         * @returns {String} Return current session token
+         * @param {Boolean} withinServer
+         * @returns {Promise} If request was sent from client
+         * @returns {String} Instantly if request was made within server
          */
-        this.get = () => {
-            return localStorage.getItem('token');
+        this.get = (withinServer = false) => {
+            return withinServer
+            ? localStorage.getItem('token')
+            : newPromise((resolve, reject) => {
+                const token = localStorage.getItem('token');
+                if (!token) reject(new Error('Token value is false: ', token));
+                resolve(token);
+            })
         };
 
-        /**
-         * Async session token verification
-         * @returns {Promise}
-         */
-        this.verify = () => {
-            return newPromise((resolve, reject) => { 
-                jwt.verify(this.getToken(), secretKey, function(error, decoded) {
-                    if (error) reject(error);
-                    resolve(decoded);
-                });
-            });
-        };
-        
         /**
          * Method to be called on user's
          * sign in or sign up
@@ -79,21 +74,48 @@ const FakeApi = (() => {
                 });
             });
         };
+        
+        /**
+         * Decodes valid token, afterwards returns data that was tokenized
+         * @param {Boolean} withHeader Specifies whether header should be
+         * included in response or not
+         */
+        this.decode = (withHeader = false) => {
+            return newPromise((resolve, reject) => {
+                const decoded = jwt.decode(this.get(true), withHeader ? { complete: true } : {});
+                if (!decoded) reject(new Error('Token is not valid, please reassign token!'));
+                resolve(decoded);
+            });
+        }
+
+        /**
+         * Async session token verification
+         * @returns {Promise}
+         */
+        this.verify = () => {
+            return newPromise((resolve, reject) => {
+                jwt.verify(this.get(true), secretKey, function(error, decoded) {
+                    if (error) reject(error);
+                    resolve(decoded);
+                });
+            });
+        };
+        
     }
 
-    function Auth() {
+    const Auth = new function() {
 
     }
 
-    function User() {
+    const User = new function() {
 
     }
 
-    function News() {
+    const News = new function() {
 
     }
 
-    function Events() {
+    const Events = new function() {
 
     }
 
@@ -101,11 +123,11 @@ const FakeApi = (() => {
      * Return public instances
      */
     return {
-        Token: new Token(),
-        Auth: new Auth(),
-        User: new User(),
-        News: new News(),
-        Events: new Events()
+        Token: Token,
+        Auth: Auth,
+        User: User,
+        News: News,
+        Events: Events
     };
 })();
 
