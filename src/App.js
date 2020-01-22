@@ -16,14 +16,6 @@ import { BrowserRouter as Router, Route} from "react-router-dom";
 
 
 const App = ()=>{
-    console.log('create', FakeApi.Token.createToken({email: 'test@gmail.com', role: 'user'})
-    .then((result) => {
-        console.log('createToken result is ', result);
-        // console.log('mee', FakeApi.Auth.test());
-        FakeApi.Token.decode().then((result) => console.log('decode result is ', result));
-    })
-    );
-    
   return(
     <Router>
       <div className="App">

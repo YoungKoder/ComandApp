@@ -16,7 +16,7 @@ const FakeApi = (() => {
      * delay time
      */
     const newPromise = (method) => {
-        const delayMS = 1000;
+        const delayMS = 100;
 
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -41,31 +41,48 @@ const FakeApi = (() => {
          */
         const set = (token) => {
             if (token) localStorage.setItem('token', token);
+            else throw new Error('Can not set false token: ', token);
         }
 
         /**
          * Retrieve token from localStorage
-         * @param {Boolean} withinServer
          * @returns {Promise} If request was sent from client
          * @returns {String} Instantly if request was made within server
          */
-        this.get = (withinServer = false) => {
-            return withinServer
-            ? localStorage.getItem('token')
-            : newPromise((resolve, reject) => {
+        this.get = () => {
+            return newPromise((resolve, reject) => {
                 const token = localStorage.getItem('token');
                 if (!token) reject(new Error('Token value is false: ', token));
                 resolve(token);
-            })
+            });
         };
 
         /**
-         * Method to be called on user's
-         * sign in or sign up
+         * Destroy session token if exists, otherwise throws an error
+         * @returns {Promise} Returns promise resolved with true
+         */
+        this.destroy = () => {
+            return newPromise((resolve, reject) => {
+                this.get()
+                .then(token => {
+                    if (!token) reject(new Error('There is no token to be destroyed!'));
+                    localStorage.removeItem('token');
+                    resolve(true);
+                })
+                .catch(error => {
+                    reject(error);
+                });
+            });
+        }
+
+        /**
+         * Create new token
+         * https://github.com/auth0/node-jsonwebtoken/blob/master/README.md#jwtsignpayload-secretorprivatekey-options-callback
+         * 
          * @param {Object} payload Data to be tokenized
          * @param {Object} options JWT options
          */
-        this.createToken = (payload, options = {}) => {
+        this.create = (payload, options = {}) => {
             return newPromise((resolve, reject) => { 
                 jwt.sign(payload, secretKey, options, (error, token) => {
                     if (error) reject(error);
@@ -77,30 +94,80 @@ const FakeApi = (() => {
         
         /**
          * Decodes valid token, afterwards returns data that was tokenized
+         * https://github.com/auth0/node-jsonwebtoken/blob/master/README.md#jwtdecodetoken--options
+         * 
          * @param {Boolean} withHeader Specifies whether header should be
          * included in response or not
          */
         this.decode = (withHeader = false) => {
             return newPromise((resolve, reject) => {
-                const decoded = jwt.decode(this.get(true), withHeader ? { complete: true } : {});
-                if (!decoded) reject(new Error('Token is not valid, please reassign token!'));
-                resolve(decoded);
+                this.get()
+                .then(token => {
+                    const decoded = jwt.decode(token, withHeader ? { complete: true } : {});
+                    if (!decoded) reject(new Error('Token is not valid, please reassign it!'));
+                    resolve(decoded);
+                })
+                .catch(error => {
+                    reject(error);
+                });
             });
         }
 
         /**
-         * Async session token verification
+         * Token verification
+         * https://github.com/auth0/node-jsonwebtoken/blob/master/README.md#jwtverifytoken-secretorpublickey-options-callback
+         * 
          * @returns {Promise}
          */
-        this.verify = () => {
+        this.verify = (options = {}) => {
+            console.log('options are ', options);
             return newPromise((resolve, reject) => {
-                jwt.verify(this.get(true), secretKey, function(error, decoded) {
-                    if (error) reject(error);
-                    resolve(decoded);
+                this.get()
+                .then(token => {
+                    jwt.verify(token, secretKey, options, function(error, decoded) {
+                        if (error) reject(error);
+                        resolve(decoded);
+                    });
+                })
+                .catch(error => {
+                    reject(error);
                 });
             });
         };
         
+        /**
+         * Refresh token via creating new
+         * Ignore token expiration by default
+         * @param {Object} options Rerfresh method options
+         * @param {Object} options.verifyOptions Verify method options
+         * @param {Object} options.createOptions Create method options
+         * @returns {Promise}
+         */
+        this.refresh = (options = {
+            verifyOptions: { ignoreExpiration: true },
+            createOptions: {}
+        }) => {
+            return newPromise((resolve, reject) => {
+                this.verify(options.verifyOptions)
+                .then(decoded => {
+                    const payload = {
+                        email: decoded.email,
+                        role: decoded.role
+                    };
+
+                    this.create(payload, options.createOptions)
+                    .then(token => {
+                        resolve(token);
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+                })
+                .catch(error => {
+                    reject(error);
+                });
+            });
+        };
     }
 
     const Auth = new function() {
