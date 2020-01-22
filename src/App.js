@@ -1,7 +1,7 @@
 import React from 'react';
 
 /*fakeApi*/
-import fakeApi from "./api/fakeApi";
+import FakeApi from "./api/fakeApi";
 
 /*pages*/
 import HelloPage from "./components/pages/helloPage/HelloPage";
