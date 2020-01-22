@@ -82,7 +82,7 @@ const FakeApi = (() => {
          * @param {Object} payload Data to be tokenized
          * @param {Object} options JWT options
          */
-        this.create = (payload, options = {}) => {
+        this.create = (payload, options = { expiresIn: '7 days' }) => {
             return newPromise((resolve, reject) => { 
                 jwt.sign(payload, secretKey, options, (error, token) => {
                     if (error) reject(error);
@@ -126,40 +126,6 @@ const FakeApi = (() => {
                     jwt.verify(token, secretKey, options, function(error, decoded) {
                         if (error) reject(error);
                         resolve(decoded);
-                    });
-                })
-                .catch(error => {
-                    reject(error);
-                });
-            });
-        };
-        
-        /**
-         * Refresh token via creating new
-         * Ignore token expiration by default
-         * @param {Object} options Rerfresh method options
-         * @param {Object} options.verifyOptions Verify method options
-         * @param {Object} options.createOptions Create method options
-         * @returns {Promise}
-         */
-        this.refresh = (options = {
-            verifyOptions: { ignoreExpiration: true },
-            createOptions: {}
-        }) => {
-            return newPromise((resolve, reject) => {
-                this.verify(options.verifyOptions)
-                .then(decoded => {
-                    const payload = {
-                        email: decoded.email,
-                        role: decoded.role
-                    };
-
-                    this.create(payload, options.createOptions)
-                    .then(token => {
-                        resolve(token);
-                    })
-                    .catch(error => {
-                        reject(error);
                     });
                 })
                 .catch(error => {
