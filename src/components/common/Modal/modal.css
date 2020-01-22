@@ -47,7 +47,9 @@
 .popup__close :hover{
     cursor: pointer;
 }
-
+.popup__content{
+    margin:7px 0;
+}
 
 @keyframes fadeIn{
     from{

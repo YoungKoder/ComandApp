@@ -6,14 +6,14 @@ import Input from "../../common/Input/input";
 import Modal from "../../common/Modal/Modal";
 
 export default class HelloPage extends Component {
+    state ={
+        showModal:false
+    }
     render(){
-
-        let openModal = false;
-
         return(
             <Fragment>
                 <Button 
-                    onClick={()=>{openModal=true}}
+                    onClick={()=>{this.setState({showModal:true})}}
                     state="error"
                     size="lg"
                     variant="outline"
@@ -26,10 +26,14 @@ export default class HelloPage extends Component {
                     errorMessege = "Error"
                     />
                 <Modal
-                    isOpen={openModal}
-                    onClose={()=>{openModal=false}}
-                    modalContent = {<p>Some text</p>}
-                    modalFooter = {<Button state="success" varian="ouline" onClick={()=>{openModal=false}}/>}/>
+                    isOpen={this.state.showModal}
+                    onClose={()=>{this.setState({showModal:false})}}
+                    modalContent = {<p>Something here</p>}
+                    modalFooter = {
+                        <Button state="success" size="sm" variant="outline" onClick={()=>{this.setState({showModal:false})}}>Save</Button>
+                    }
+                    locationX="right"
+                    locationY="top"/>
             </Fragment>
         )
     }
