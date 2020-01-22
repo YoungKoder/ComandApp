@@ -3,18 +3,41 @@ import Button from "../Button/Button";
 
 import "./modal.css"
 
+
+const locations = [
+    "top",
+    "bottom",
+    "left",
+    "right",
+]
 const Modal = ({
-    children,
     isOpen,
-    onClose
+    onClose,
+    modalContent,
+    modalFooter,
+    locationX="center",
+    locationY="center"
 }) =>{
+
+    let classeNames="";
+
+    if(locationX !== "center" && locations.includes(locationX)){
+        classeNames += " overlay--X--"+locationX;
+    }
+
+    if(locationY !== "center" && locations.includes(locationY)){
+        classeNames += " overlay--Y--"+locationY;
+    }
+    
+
     let modal = (
-        <div className="overlay fade">
+        <div className={"overlay fade" + classeNames}>
             <div className="popup">
-                <div className="popup-close"><Button buttonSie="btn--small" onClick={onClose}>x</Button></div>
-                <div>
-                    {children}
+                <div className="popup__close"><Button size="sm" onClick={onClose}>x</Button></div>
+                <div className="popup__content">
+                    {modalContent}
                 </div>
+                { modalFooter? <div className="popup__footer">{modalFooter}</div>:null}
             </div>
         </div>
     )
