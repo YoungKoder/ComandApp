@@ -1,9 +1,12 @@
 
 import React, { Component, Fragment } from "react";
 
+import "./HelloPage.css"
+
 import Button from "../../common/Button/Button";
 import Input from "../../common/Input/input";
 import Modal from "../../common/Modal/Modal";
+import Drobdown from "../../common/Drobdown/DrobdownList/Drobdown";
 
 export default class HelloPage extends Component {
     state ={
@@ -34,6 +37,12 @@ export default class HelloPage extends Component {
                     }
                     locationX="right"
                     locationY="top"/>
+                <div className="test" >
+                    <Drobdown label={<p>Label</p>}>
+                        LOGOUT
+                    </Drobdown>
+                </div>
+                
             </Fragment>
         )
     }
