@@ -120,7 +120,6 @@ const FakeApi = (() => {
          * @returns {Promise}
          */
         this.verify = (options = {}) => {
-            console.log('options are ', options);
             return newPromise((resolve, reject) => {
                 this.get()
                 .then(token => {
