@@ -49,7 +49,7 @@ const FakeApi = (() => {
          * @returns {Promise} If request was sent from client
          * @returns {String} Instantly if request was made within server
          */
-        this.get = () => {
+        const get = () => {
             return newPromise((resolve, reject) => {
                 const token = localStorage.getItem('token');
                 if (!token) reject(new Error('Token value is false: ', token));
@@ -63,7 +63,7 @@ const FakeApi = (() => {
          */
         this.destroy = () => {
             return newPromise((resolve, reject) => {
-                this.get()
+                get()
                 .then(token => {
                     if (!token) reject(new Error('There is no token to be destroyed!'));
                     localStorage.removeItem('token');
@@ -82,7 +82,7 @@ const FakeApi = (() => {
          * @param {Object} payload Data to be tokenized
          * @param {Object} options JWT options
          */
-        this.create = (payload, options = {}) => {
+        this.create = (payload, options = { expiresIn: '7 days' }) => {
             return newPromise((resolve, reject) => { 
                 jwt.sign(payload, secretKey, options, (error, token) => {
                     if (error) reject(error);
@@ -101,7 +101,7 @@ const FakeApi = (() => {
          */
         this.decode = (withHeader = false) => {
             return newPromise((resolve, reject) => {
-                this.get()
+                get()
                 .then(token => {
                     const decoded = jwt.decode(token, withHeader ? { complete: true } : {});
                     if (!decoded) reject(new Error('Token is not valid, please reassign it!'));
@@ -121,45 +121,11 @@ const FakeApi = (() => {
          */
         this.verify = (options = {}) => {
             return newPromise((resolve, reject) => {
-                this.get()
+                get()
                 .then(token => {
                     jwt.verify(token, secretKey, options, function(error, decoded) {
                         if (error) reject(error);
                         resolve(decoded);
-                    });
-                })
-                .catch(error => {
-                    reject(error);
-                });
-            });
-        };
-        
-        /**
-         * Refresh token via creating new
-         * Ignore token expiration by default
-         * @param {Object} options Rerfresh method options
-         * @param {Object} options.verifyOptions Verify method options
-         * @param {Object} options.createOptions Create method options
-         * @returns {Promise}
-         */
-        this.refresh = (options = {
-            verifyOptions: { ignoreExpiration: true },
-            createOptions: {}
-        }) => {
-            return newPromise((resolve, reject) => {
-                this.verify(options.verifyOptions)
-                .then(decoded => {
-                    const payload = {
-                        email: decoded.email,
-                        role: decoded.role
-                    };
-
-                    this.create(payload, options.createOptions)
-                    .then(token => {
-                        resolve(token);
-                    })
-                    .catch(error => {
-                        reject(error);
                     });
                 })
                 .catch(error => {
