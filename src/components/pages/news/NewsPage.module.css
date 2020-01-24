@@ -1,0 +1,9 @@
+.content {
+    display: flex;
+}
+
+.news {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+}
