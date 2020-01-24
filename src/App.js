@@ -22,17 +22,17 @@ const App = ()=>{
             <Route path="/sign-up" component={SignupPage} />
             <Route path="/news" 
                    render={(props => (
-                        <ProtectedRoute {...props} component={NewsPage} />
+                        <ProtectedRoute {...props} Component={NewsPage} />
                     ))} 
             />
             <Route path="/events" 
                    render={(props => (
-                        <ProtectedRoute {...props} component={EventsPage} />
+                        <ProtectedRoute {...props} Component={EventsPage} />
                     ))} 
             />
             <Route path="/user" 
                    render={(props => (
-                        <ProtectedRoute {...props} component={UserProfile} />
+                        <ProtectedRoute {...props} Component={UserProfile} />
                     ))} 
             />
       </div>
