@@ -1,7 +1,10 @@
-import React, { Component } from "react";
-import NewsItem from './NewsItem';
+import React, { Component, Fragment } from "react";
+import NewsItem from "./NewsItem";
 
-export default class NewsPage extends Component {
+import Navbar from "../../layout/navbar/Navbar";
+import Sidebar from "../../layout/sidebar/Sidebar";
+
+export default class NewsPage extends Component{
     constructor(props) {
         console.log('props are ', props);
         super(props);
@@ -9,7 +12,11 @@ export default class NewsPage extends Component {
 
     render(){
         return(
-            <h1>News!!!</h1>
+            <Fragment>
+                <Navbar/>
+                <Sidebar/>
+            </Fragment>
+            
         )
     }
 }

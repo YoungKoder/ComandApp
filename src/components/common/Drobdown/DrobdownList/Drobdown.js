@@ -2,8 +2,6 @@ import React, { Component } from "react";
 
 import "./Drobdown.css";
 
-import DrobdownListItem from "../DrobdownListItem/DrobdownListItem"
-
 export default class Drobdown extends Component{
 
     state = {
@@ -29,30 +27,20 @@ export default class Drobdown extends Component{
     }
 
     render(){
-        const {label,menuItems} = this.props;
+        const {label,children} = this.props;
 
-        const menuOptions = menuItems.map((item)=>{
-            
-            const{id,labelForOption}=item;
-
-            return(
-                <p key={id}>
-                    <DrobdownListItem label={labelForOption}/>
-                </p>
-            )
-        })
         return(
             <div className="drobdown">
-                <p className="drobdown-label" onClick={this.toShowMenu}>
+                <p className="drobdown__label" >
                     {label}
                 </p>
-
+                <p className="drobdown__button" onClick={this.toShowMenu}>
+                    <i className="fas fa-sort-down"></i>
+                </p>
                 {
                     this.state.showMenu ?
                     (
-                        <div className="drobdown-menu">
-                            {menuOptions}
-                        </div>
+                        <div className="drobdown__menu">{children}</div>
                     )
                     :(null)
                 }

@@ -1,26 +1,30 @@
 
 .drobdown{
     position: relative;
+    display:flex;
+    justify-content: flex-end;
     padding:5px 10px;
-    border:1px solid red;
-}
-.drobdown-label{
-    
 }
 
-.drobdown-label:hover{
+.drobdown__label{
+    margin-right:5px;
+}
+
+
+.drobdown__label:hover{
     cursor: pointer;
 }
 
-.drobdown-menu{
+.drobdown__menu{
     position:absolute;
     display: flex;
     justify-content: center;
     bottom:-40px;
     padding:5px 0;
-    left:-50px;
+    left:0;
     right:0;
-    border:1px solid red;
+    background:#fff;
+    border: 1px solid #7c7b7b;
 }
 
 .drobdown-menu p {

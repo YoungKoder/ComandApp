@@ -49,7 +49,7 @@ const FakeApi = (() => {
          * @returns {Promise} If request was sent from client
          * @returns {String} Instantly if request was made within server
          */
-        this.get = () => {
+        const get = () => {
             return newPromise((resolve, reject) => {
                 const token = localStorage.getItem('token');
                 if (!token) reject(new Error('Token value is false: ', token));
@@ -63,7 +63,7 @@ const FakeApi = (() => {
          */
         this.destroy = () => {
             return newPromise((resolve, reject) => {
-                this.get()
+                get()
                 .then(token => {
                     if (!token) reject(new Error('There is no token to be destroyed!'));
                     localStorage.removeItem('token');
@@ -101,7 +101,7 @@ const FakeApi = (() => {
          */
         this.decode = (withHeader = false) => {
             return newPromise((resolve, reject) => {
-                this.get()
+                get()
                 .then(token => {
                     const decoded = jwt.decode(token, withHeader ? { complete: true } : {});
                     if (!decoded) reject(new Error('Token is not valid, please reassign it!'));
@@ -121,7 +121,7 @@ const FakeApi = (() => {
          */
         this.verify = (options = {}) => {
             return newPromise((resolve, reject) => {
-                this.get()
+                get()
                 .then(token => {
                     jwt.verify(token, secretKey, options, function(error, decoded) {
                         if (error) reject(error);
@@ -163,4 +163,10 @@ const FakeApi = (() => {
     };
 })();
 
-export default FakeApi;
+const Token = FakeApi.Token;
+const Auth = FakeApi.Auth;
+const User = FakeApi.User;
+const News = FakeApi.News;
+const Events = FakeApi.Events;
+
+export {Token, Auth, User, News, Events};

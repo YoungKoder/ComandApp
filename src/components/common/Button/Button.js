@@ -6,11 +6,7 @@ const states = [
     "primary",
     "warning",
     "error",
-    "success",
-    "primary",
-    "warning",
-    "error",
-    "success",
+    "success"
 ];
 
 const variants = [
