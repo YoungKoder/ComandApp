@@ -1,7 +1,15 @@
 import React from "react";
 
+import Button from "../../common/Button/Button";
+import classes from "./NewsList.module.css";
+
 export default function NewsList(props) {
+    const NewsItem = props.NewsItem;
     return (
-        <h1>List</h1>
+        <>
+            {/* {<props.NewsItem />} */}
+            <div className={classes['news__controls']}><Button>Add</Button></div>
+    <div className={classes['news__list']}>{<NewsItem />}{<NewsItem />}</div>
+        </>
     );
 }

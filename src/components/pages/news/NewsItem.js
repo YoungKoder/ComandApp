@@ -1,7 +1,11 @@
 import React from "react";
 
+import classes from "./NewsItem.module.css";
+
 export default function NewsItem(props) {
     return (
-        <h1>Item</h1>
+        <>
+            <div className={classes.item}></div>
+        </>
     );
 }

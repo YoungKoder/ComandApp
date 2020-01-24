@@ -1,11 +1,13 @@
-import React, { Component, Fragment } from "react";
-import NewsItem from "./NewsItem";
+import React, { Component } from "react";
 import Navbar from "../../layout/navbar/Navbar";
 import Sidebar from "../../layout/sidebar/Sidebar";
+import NewsItem from "./NewsItem";
+import NewsList from "./NewsList";
+import { News } from "../../../api/fakeApi";
 
 import classes from "./NewsPage.module.css";
 
-export default class NewsPage extends Component{
+export default class NewsPage extends Component {
     constructor(props) {
         console.log('props are ', props);
         super(props);
@@ -15,18 +17,19 @@ export default class NewsPage extends Component{
 
     render(){
         return(
-            <Fragment>
+            <>
                 <Navbar/>
                 <div className={classes.content}>
                     <Sidebar/>
                     <main className={classes.news}>
-                        {this.newsIdQueryParameter
+                        {
+                         this.newsIdQueryParameter
                          ? <NewsItem />
-                         : console.log('fail')
+                         : <NewsList NewsItem={NewsItem}></NewsList>
                         }
                     </main>
                 </div>
-            </Fragment>
+            </>
             
         )
     }
