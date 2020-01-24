@@ -163,4 +163,10 @@ const FakeApi = (() => {
     };
 })();
 
-export default FakeApi;
+const Token = FakeApi.Token;
+const Auth = FakeApi.Auth;
+const User = FakeApi.User;
+const News = FakeApi.News;
+const Events = FakeApi.Events;
+
+export {Token, Auth, User, News, Events};
