@@ -37,6 +37,10 @@ class UserPage extends React.Component {
 
   //Form Events
 
+  saveToLocalStorage = props => {
+    localStorage.setItem("user", JSON.stringify(this.state.user));
+  };
+
   onChangeName(e) {
     this.setState({
       user: Object.assign(this.state.user, { name: e.target.value })
@@ -91,9 +95,9 @@ class UserPage extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  /* componentDidUpdate(prevProps, prevState) {
     localStorage.setItem("user", JSON.stringify(this.state.user));
-  }
+  }*/
   /*
   saveToLocalStorage() {
     localStorage.setItem("user", JSON.stringify(this.state.user));
@@ -108,7 +112,7 @@ class UserPage extends React.Component {
   render() {
     const userInfo = this.state.user;
 
-    console.log("userInfo", userInfo);
+    //console.log("userInfo", userInfo);
     return (
       <div className="user__block">
         <h1 className="user__block_title">Profile information</h1>
@@ -177,7 +181,11 @@ class UserPage extends React.Component {
             <Button></Button>
           </Modal>
 
-          <Button type="button" className="btn sweep-to-right">
+          <Button
+            type="button"
+            className="btn sweep-to-right"
+            onClick={this.saveToLocalStorage}
+          >
             Save
           </Button>
         </form>
