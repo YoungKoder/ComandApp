@@ -150,7 +150,7 @@ const FakeApi = (() => {
          * @param {Object} newsData Default data blueprint
          * @returns {Promise}
          */
-        this.add = (newsData = {
+        this.add = (newsItemData = {
             title: '',
             description: '',
             image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXQn7TjsgkXDv7yDmoL8aV4RpF9K5ba5DDULOxqe4Y1674KzDErw&s'
@@ -158,17 +158,19 @@ const FakeApi = (() => {
             return newPromise((resolve, reject) => {
                 Token.verify()
                 .then(decoded => {
-                    const newsId = Date.now();
+                    const newsItemId = Date.now();
+                    const newsItem = { [`${newsItemId}`]: newsItemData };
                     localStorage.setItem('news',
                         JSON.stringify(
                             Object.assign(
-                                { [`${newsId}`]: newsData },
+                                newsItem,
                                 JSON.parse(localStorage.getItem('news') || '{}')
                             )
                         )
                     );
-                    newsId ? resolve(newsId)
-                           : reject(new Error('Can not add new news! False newsId provided'));
+                    JSON.parse(localStorage.getItem('news'))[newsItemId] 
+                    ? resolve(newsItem)
+                    : reject(new Error('Error while creating news item data!'));
                 })
                 .catch(error => reject(error));
             });
