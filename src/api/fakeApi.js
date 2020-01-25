@@ -26,7 +26,7 @@ const FakeApi = (() => {
     }
 
     /**
-     * Api's entities
+     * Api's submodules
      */
     /**
      * JWT API wrapper
@@ -156,17 +156,21 @@ const FakeApi = (() => {
             image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXQn7TjsgkXDv7yDmoL8aV4RpF9K5ba5DDULOxqe4Y1674KzDErw&s'
         }) => {
             return newPromise((resolve, reject) => {
-                const newsId = Date.now();
-                localStorage.setItem('news',
-                    JSON.stringify(
-                        Object.assign(
-                            { [`${newsId}`]: newsData },
-                            JSON.parse(localStorage.getItem('news') || '{}')
+                Token.verify()
+                .then(decoded => {
+                    const newsId = Date.now();
+                    localStorage.setItem('news',
+                        JSON.stringify(
+                            Object.assign(
+                                { [`${newsId}`]: newsData },
+                                JSON.parse(localStorage.getItem('news') || '{}')
+                            )
                         )
-                    )
-                );
-                newsId ? resolve(newsId)
-                       : reject(new Error('Can not add new news! False newsId provided'));
+                    );
+                    newsId ? resolve(newsId)
+                           : reject(new Error('Can not add new news! False newsId provided'));
+                })
+                .catch(error => reject(error));
             });
         };
 
@@ -177,12 +181,17 @@ const FakeApi = (() => {
          */
         this.delete = (newsId) => {
             return newPromise((resolve, reject) => {
-                const news = localStorage.getItem('news');
-                if (!news) reject(new Error('There is no news data yet!'));
-                if (!news[newsId]) reject(new Error('There is no news with such id!'));
-                delete news[newsId];
-                localStorage.setItem('news', JSON.stringify(news));
-                resolve(true);
+                Token.verify()
+                .then(decoded => {
+                    const newsJsonString = localStorage.getItem('news');
+                    if (!newsJsonString) reject(new Error('There is no news data yet!'));
+                    const news = JSON.parse(newsJsonString);
+                    if (!news[newsId]) reject(new Error('There is no news with such id!'));
+                    delete news[newsId];
+                    localStorage.setItem('news', JSON.stringify(news));
+                    resolve(true);
+                })
+                .catch(error => reject(error));
             });
         };
     }
