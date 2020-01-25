@@ -119,7 +119,7 @@ const FakeApi = (() => {
          * 
          * @returns {Promise}
          */
-        this.verify = (options = {}) => {
+        this.verify = (options = {}, forceLogout = true) => {
             return newPromise((resolve, reject) => {
                 get()
                 .then(token => {
@@ -129,7 +129,8 @@ const FakeApi = (() => {
                     });
                 })
                 .catch(error => {
-                    reject(error);
+                    if (!forceLogout) reject(error);
+                    window.location.replace('/sign-in');
                 });
             });
         };
