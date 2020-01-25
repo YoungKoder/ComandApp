@@ -162,12 +162,12 @@ const FakeApi = (() => {
                     const newsItemId = Date.now();
                     const newsItem = { [`${newsItemId}`]: newsItemData };
                     const news = Object.assign(
-                        newsItem,
-                        JSON.parse(localStorage.getItem('news') || '{}')
+                        JSON.parse(localStorage.getItem('news') || '{}'),
+                        newsItem
                     );
 
                     localStorage.setItem('news', JSON.stringify(news));
-                    resolve(newsItem, news);
+                    resolve([news, newsItem]);
                 })
                 .catch(error => reject(error));
             });
@@ -210,9 +210,13 @@ const FakeApi = (() => {
                 Token.verify()
                 .then(decoded => {
                     const newsJsonString = localStorage.getItem('news');
-                    if (!newsJsonString) reject(new Error('There is no news!'));
                     const news = JSON.parse(newsJsonString);
-                    resolve(newsItemId ? news[newsItemId] : news);
+                    if (newsItemId) {
+                        if (!news) reject(new Error('There is no news!'));
+                        if (!news[newsItemId]) reject(new Error('There is no news with such id!'));
+                        resolve(news[newsItemId]);
+                    }
+                    resolve(news);
                 })
                 .catch(error => reject(error));
             });
