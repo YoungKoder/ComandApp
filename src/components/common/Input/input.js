@@ -2,29 +2,41 @@ import React from "react";
 
 import "./input.css";
 
+const templates = [
+  "queue",
+  "stack"
+]
+
 const Input = ({
     inputType = "text",
     label,
     value,
     onChange,
     errorMessege,
-    valid,
-    shouldValidate,
-    touched,
+    valid = true,
+    template = "stack",
     name
   }) => {
-    let classNames = "input";
+
+    console.log(valid)
+    let classNames = "";
     const htmlFor = `${Math.floor(Math.random() * 10000)}`;
   
-    if (!valid && shouldValidate && touched) {
+    if (!valid) {
       classNames += " invalid";
     }
     
+    if(template !== "stack" && templates.includes(template)){
+      classNames += " input--"+template;
+    }
+
     return (
-      <div className={classNames}>
-        <label htmlFor={htmlFor}>{label}</label>
+      <div className={"input" + classNames}>
+        {label? <label htmlFor={htmlFor}>{label}</label> :null}
+
         <input type={inputType} id={htmlFor} name={name} value={value} onChange={onChange} />
-        {!valid && shouldValidate && touched ? <span>{errorMessege}</span> : null}
+
+        {!valid && errorMessege ? <span>{errorMessege}</span> : null}
       </div>
     );
   };

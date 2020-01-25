@@ -1,7 +1,26 @@
-import React from "react";
+import React, { Component } from "react";
 
-function AuthSignin() {
-  return <h1>Sign in Page</h1>;
+import Input from "../common/Input/input";
+import Button from "../common/Button/Button";
+
+export default class AuthSignin extends Component{
+
+  state = {
+    
+  }
+
+  render(){
+    return (
+      <Fragment>
+          <form className="form" onSubmit={this.submitHandler}>
+            <Input label="Email" template="queue" />
+            <Input label="Password" inputType="password" template="queue" />
+          </form>
+      </Fragment>
+    )
+  }
 }
 
-export default AuthSignin;
+
+
+
