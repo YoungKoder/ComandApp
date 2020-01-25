@@ -1,9 +1,36 @@
-import React, { Component } from "react"
+import React, { Component } from "react";
+import Navbar from "../../layout/navbar/Navbar";
+import Sidebar from "../../layout/sidebar/Sidebar";
+import NewsItem from "./NewsItem";
+import NewsList from "./NewsList";
+import { News } from "../../../api/fakeApi";
 
-export default class NewsPage extends Component{
+import classes from "./NewsPage.module.css";
+
+export default class NewsPage extends Component {
+    constructor(props) {
+        console.log('props are ', props);
+        super(props);
+
+        this.newsIdQueryParameter = new URLSearchParams(this.props.location.search).get('id');
+    }
+
     render(){
         return(
-            <h1>News!!!</h1>
+            <>
+                <Navbar/>
+                <div className={classes.content}>
+                    <Sidebar/>
+                    <main className={classes.news}>
+                        {
+                         this.newsIdQueryParameter
+                         ? <NewsItem />
+                         : <NewsList NewsItem={NewsItem}></NewsList>
+                        }
+                    </main>
+                </div>
+            </>
+            
         )
     }
 }

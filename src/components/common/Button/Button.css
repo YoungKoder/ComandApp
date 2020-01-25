@@ -1,10 +1,12 @@
 :root {
     --primary: #4628ff;
     --warning: #FFD028;
-    --danger: #EB3F27;
+    --error: #EB3F27;
     --success: #75fa83;
     --white: #ffffff;
     --dark: #181717;
+    /* --solid: none;
+    --outline: 2px solid #000; */
 }
 .btn {
     font-family: sans-serif;
@@ -18,49 +20,56 @@
     transform: translateY(-3px);
 }
 
-/* button colors and styles*/
 
-.btn--primary--solid {
+/*states*/
+.btn--primary {
     background-color: var(--primary);
-    color: var(--white);
-    border: none;
 }
-.btn--warning--solid {
+.btn--warning {
     background-color: var(--warning);
-    color: var(--dark);
-    border: none;
 }
-.btn--danger--solid {
-    background-color: var(--danger);
-    color: var(--white);
-    border: none;
+.btn--error {
+    background-color: var(--error);
 }
-.btn--success-solid {
+.btn--success {
     background-color: var(--success);
-    color: var(--white);
-    border: none;
 }
 
-.btn--primary--outline {
+/*variants*/
+.btn--solid{
+    border:none;
+    color: var(--white);
+}
+
+.btn--outline {
     background-color: transparent;
-    border: 2px solid var(--primary);
+}
+
+/*combines*/
+.btn--warnin.btn--solid{
+    color:var(--dark);
+}
+
+.btn--primary.btn--outline{
+    border:2px solid var(--primary);
     color: var(--primary);
 }
-.btn--warning--outline {
-    background-color: transparent;
-    border: 2px solid var(--warning);
-    color: var(--warning);
+
+.btn--warning.btn--outline{
+    border:2px solid var(--warning);
+    color:var(--warning);
 }
-.btn--danger--outline {
-    background-color: transparent;
-    border: 2px solid var(--danger);
-    color: var(--danger);
+
+.btn--error.btn--outline{
+    border:2px solid var(--error);
+    color:var(--error);
 }
-.btn--success--outline {
-    background-color: transparent;
-    border: 2px solid var(--success);
-    color: var(--success);
+
+.btn--success.btn--outline{
+    border:2px solid var(--success);
+    color:var(--success);
 }
+
 .disabled {
     pointer-events: none;
     opacity: 0.5;
@@ -68,15 +77,15 @@
 }
 
 /* button sizes*/
-.btn--small{
+.btn--sm{
     padding: 5px 10px;
     font-size:14px;
 }
-.btn--medium {
+.btn--md {
     padding: 10px 20px;
     font-size: 18px;
 }
-.btn--large {
+.btn--lg {
     padding: 15px 30px;
     font-size: 20px;
 }

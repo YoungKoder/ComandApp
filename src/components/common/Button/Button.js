@@ -2,48 +2,59 @@ import React from "react";
 
 import './Button.css'
 
-const styles = [
-    "btn--primary--solid",
-    "btn--warning--solid",
-    "btn--danger--solid",
-    "btn--success--solid",
-    "btn--primary--outline",
-    "btn--warning--outline",
-    "btn--danger--outline",
-    "btn--success--outline",
+const states = [
+    "primary",
+    "warning",
+    "error",
+    "success"
+];
+
+const variants = [
+    "solid",
+    "outline"
 ];
 
 const sizes = [
-    "btn--small",
-    "btn--medium",
-    "btn--large",
+    "sm",
+    "md",
+    "lg",
 ];
 
 const Button = ({
     children, 
-    type, 
+    type="button", 
     onClick, 
-    buttonStyle, 
-    buttonSize,
+    state="primary", 
+    size="md",
+    variant="solid"
 }) => {
 
-    let classesNames = 'btn';
+    let classesNames = '';
 
-    if(styles.includes(buttonStyle)){
-        classesNames+= " " + buttonStyle;
-    }else{
-        classesNames+= " " + styles[0];
+    if(state !== "primary" && states.includes(state)){
+        classesNames+= " btn--" + state;
+    }
+    else{
+        classesNames+= " btn--primary";
     }
 
-    if(sizes.includes(buttonSize)){
-        classesNames += " " + buttonSize;
-    }else{
-        classesNames+= " " + sizes[0];
+    if(variant !== "solid" && variants.includes(variant)){
+        classesNames+=" btn--" + variant;
+    }
+    else{
+        classesNames+=" btn--solid";
+    }
+
+    if(size !== "md" && sizes.includes(size)){
+        classesNames += " btn--" + size;
+    }
+    else{
+        classesNames+= " btn--md";
     }
 
     return(
         <button 
-            className={classesNames}
+            className={"btn" + classesNames}
             onClick={onClick}
             type={type}
         >
