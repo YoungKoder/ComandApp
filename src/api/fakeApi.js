@@ -206,10 +206,14 @@ const FakeApi = (() => {
          */
         this.get = (newsItemId = '') => {
             return newPromise((resolve, reject) => {
-                const newsJsonString = localStorage.getItem('news');
-                if (!newsJsonString) reject(new Error('There is no news!'));
-                const news = JSON.parse(newsJsonString);
-                resolve(newsItemId ? news[newsItemId] : news);
+                Token.verify()
+                .then(decoded => {
+                    const newsJsonString = localStorage.getItem('news');
+                    if (!newsJsonString) reject(new Error('There is no news!'));
+                    const news = JSON.parse(newsJsonString);
+                    resolve(newsItemId ? news[newsItemId] : news);
+                })
+                .catch(error => reject(error));
             });
         };
 
@@ -221,12 +225,16 @@ const FakeApi = (() => {
          */
         this.update = (newsItemId, newsItemData) => {
             return newPromise((resolve, reject) => {
-                const newsJsonString = localStorage.getItem('news');
-                const news = JSON.parse(newsJsonString);
-                if (!news[newsItemId]) reject(new Error('There is no news with such id'));
-                news[newsItemId] = newsItemData;
-                localStorage.setItem('news', JSON.stringify(news));
-                resolve(true);
+                Token.verify()
+                .then(decoded => {
+                    const newsJsonString = localStorage.getItem('news');
+                    const news = JSON.parse(newsJsonString);
+                    if (!news[newsItemId]) reject(new Error('There is no news with such id'));
+                    news[newsItemId] = newsItemData;
+                    localStorage.setItem('news', JSON.stringify(news));
+                    resolve(true);
+                })
+                .catch(error => reject(error));
             });
         };
     }
