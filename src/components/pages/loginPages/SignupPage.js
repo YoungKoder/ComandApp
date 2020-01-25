@@ -1,8 +1,10 @@
 import React from "react";
 
+import Auth from "../../auth/Auth";
+
 const SignupPage = () => {
     return (
-        <h1>SignupPage</h1>
+        <Auth authForm ="signUp"/>
     )
 }
 
