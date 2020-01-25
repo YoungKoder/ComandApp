@@ -160,17 +160,13 @@ const FakeApi = (() => {
                 .then(decoded => {
                     const newsItemId = Date.now();
                     const newsItem = { [`${newsItemId}`]: newsItemData };
-                    localStorage.setItem('news',
-                        JSON.stringify(
-                            Object.assign(
-                                newsItem,
-                                JSON.parse(localStorage.getItem('news') || '{}')
-                            )
-                        )
+                    const news = Object.assign(
+                        newsItem,
+                        JSON.parse(localStorage.getItem('news') || '{}')
                     );
-                    JSON.parse(localStorage.getItem('news'))[newsItemId] 
-                    ? resolve(newsItem)
-                    : reject(new Error('Error while creating news item data!'));
+
+                    localStorage.setItem('news', JSON.stringify(news));
+                    resolve(newsItem, news);
                 })
                 .catch(error => reject(error));
             });
@@ -181,19 +177,56 @@ const FakeApi = (() => {
          * @param {String} newsId Id of news item to be deleted
          * @returns {Promise}
          */
-        this.delete = (newsId) => {
+        this.delete = (newsItemId = '') => {
             return newPromise((resolve, reject) => {
                 Token.verify()
                 .then(decoded => {
                     const newsJsonString = localStorage.getItem('news');
-                    if (!newsJsonString) reject(new Error('There is no news data yet!'));
+                    if (!newsJsonString) reject(new Error('There is no news!'));
                     const news = JSON.parse(newsJsonString);
-                    if (!news[newsId]) reject(new Error('There is no news with such id!'));
-                    delete news[newsId];
-                    localStorage.setItem('news', JSON.stringify(news));
+
+                    if (newsItemId) {
+                        if (!news[newsItemId]) reject(new Error('There is no news with such id!'));
+                        delete news[newsItemId];
+                        localStorage.setItem('news', JSON.stringify(news));
+                        resolve(news);
+                    }
+
+                    localStorage.removeItem('news');
                     resolve(true);
                 })
                 .catch(error => reject(error));
+            });
+        };
+
+        /**
+         * Get all or particular news
+         * @param {String} newsItemId Id of news item to fetch
+         * @returns {Promise}
+         */
+        this.get = (newsItemId = '') => {
+            return newPromise((resolve, reject) => {
+                const newsJsonString = localStorage.getItem('news');
+                if (!newsJsonString) reject(new Error('There is no news!'));
+                const news = JSON.parse(newsJsonString);
+                resolve(newsItemId ? news[newsItemId] : news);
+            });
+        };
+
+        /**
+         * Update news item data
+         * @param {String} newsItemId
+         * @param {String} newsItemData
+         * @returns {Promise}
+         */
+        this.update = (newsItemId, newsItemData) => {
+            return newPromise((resolve, reject) => {
+                const newsJsonString = localStorage.getItem('news');
+                const news = JSON.parse(newsJsonString);
+                if (!news[newsItemId]) reject(new Error('There is no news with such id'));
+                news[newsItemId] = newsItemData;
+                localStorage.setItem('news', JSON.stringify(news));
+                resolve(true);
             });
         };
     }
