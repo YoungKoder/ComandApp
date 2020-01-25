@@ -1,5 +1,4 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import  { Token }  from '../../api/fakeApi';
 
 export default class ProtectedRoute extends React.Component {
@@ -15,7 +14,6 @@ export default class ProtectedRoute extends React.Component {
     componentDidMount() {
         Token.verify()
         .then(decoded => this.setState({ isValidToken: true }))
-        .catch(error => console.log(error))
         .finally(() => this.setState({ isLoading: false }));
     }
 
@@ -23,7 +21,7 @@ export default class ProtectedRoute extends React.Component {
         const { Component, ...props } = this.props;
         return (
             this.state.isLoading ? <div>Loading...</div> :
-            this.state.isValidToken ? <Component {...props} /> : <Redirect to='/sign-in'/>
+            this.state.isValidToken ? <Component {...props} /> : null
         );
     }
 }
