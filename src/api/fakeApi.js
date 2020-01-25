@@ -26,7 +26,7 @@ const FakeApi = (() => {
     }
 
     /**
-     * Api's entities
+     * Api's submodules
      */
     /**
      * JWT API wrapper
@@ -41,8 +41,8 @@ const FakeApi = (() => {
          */
         const set = (token) => {
             if (token) localStorage.setItem('token', token);
-            else throw new Error('Can not set false token: ', token);
-        }
+            else throw new Error('Can not set false token');
+        };
 
         /**
          * Retrieve token from localStorage
@@ -52,7 +52,7 @@ const FakeApi = (() => {
         const get = () => {
             return newPromise((resolve, reject) => {
                 const token = localStorage.getItem('token');
-                if (!token) reject(new Error('Token value is false: ', token));
+                if (!token) reject(new Error('Token value is false'));
                 resolve(token);
             });
         };
@@ -73,7 +73,7 @@ const FakeApi = (() => {
                     reject(error);
                 });
             });
-        }
+        };
 
         /**
          * Create new token
@@ -111,7 +111,7 @@ const FakeApi = (() => {
                     reject(error);
                 });
             });
-        }
+        };
 
         /**
          * Token verification
@@ -145,6 +145,55 @@ const FakeApi = (() => {
 
     const News = new function() {
 
+        /**
+         * Add new news item with default data
+         * @param {Object} newsData Default data blueprint
+         * @returns {Promise}
+         */
+        this.add = (newsData = {
+            title: '',
+            description: '',
+            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXQn7TjsgkXDv7yDmoL8aV4RpF9K5ba5DDULOxqe4Y1674KzDErw&s'
+        }) => {
+            return newPromise((resolve, reject) => {
+                Token.verify()
+                .then(decoded => {
+                    const newsId = Date.now();
+                    localStorage.setItem('news',
+                        JSON.stringify(
+                            Object.assign(
+                                { [`${newsId}`]: newsData },
+                                JSON.parse(localStorage.getItem('news') || '{}')
+                            )
+                        )
+                    );
+                    newsId ? resolve(newsId)
+                           : reject(new Error('Can not add new news! False newsId provided'));
+                })
+                .catch(error => reject(error));
+            });
+        };
+
+        /**
+         * Delete news item
+         * @param {String} newsId Id of news item to be deleted
+         * @returns {Promise}
+         */
+        this.delete = (newsId) => {
+            return newPromise((resolve, reject) => {
+                Token.verify()
+                .then(decoded => {
+                    const newsJsonString = localStorage.getItem('news');
+                    if (!newsJsonString) reject(new Error('There is no news data yet!'));
+                    const news = JSON.parse(newsJsonString);
+                    if (!news[newsId]) reject(new Error('There is no news with such id!'));
+                    delete news[newsId];
+                    localStorage.setItem('news', JSON.stringify(news));
+                    resolve(true);
+                })
+                .catch(error => reject(error));
+            });
+        };
     }
 
     const Events = new function() {
