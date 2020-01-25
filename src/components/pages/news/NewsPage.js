@@ -11,6 +11,10 @@ export default class NewsPage extends Component {
     constructor(props) {
         console.log('props are ', props);
         super(props);
+        this.state = {
+            newsList: null,
+            newsItem: null
+        }
 
         this.newsIdQueryParameter = new URLSearchParams(this.props.location.search).get('id');
     }
@@ -25,7 +29,10 @@ export default class NewsPage extends Component {
                         {
                          this.newsIdQueryParameter
                          ? <NewsItem />
-                         : <NewsList NewsItem={NewsItem}></NewsList>
+                         : <NewsList 
+                            addNewsItemFunction={News.add} 
+                            NewsItem={NewsItem}>
+                           </NewsList>
                         }
                     </main>
                 </div>
