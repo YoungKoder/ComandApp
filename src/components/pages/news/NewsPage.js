@@ -16,7 +16,7 @@ export default function NewsPage(props) {
                 <main className={classes.news}>
                     {
                         newsIdQueryParameter
-                        ? <NewsItemPage newsItemId={newsIdQueryParameter} />
+                        ? <NewsItemPage requestNewsItemId={newsIdQueryParameter} />
                         : <NewsListPage />
                     }
                 </main>
