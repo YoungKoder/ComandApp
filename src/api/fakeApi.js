@@ -130,6 +130,7 @@ const FakeApi = (() => {
                 })
                 .catch(error => {
                     if (!forceLogout) reject(error);
+                    localStorage.removeItem('token');
                     window.location.replace('/sign-in');
                 });
             });
