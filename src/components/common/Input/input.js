@@ -18,7 +18,6 @@ const Input = ({
     name
   }) => {
 
-    console.log(valid)
     let classNames = "";
     const htmlFor = `${Math.floor(Math.random() * 10000)}`;
   
@@ -34,7 +33,7 @@ const Input = ({
       <div className={"input" + classNames}>
         {label? <label htmlFor={htmlFor}>{label}</label> :null}
 
-        <input type={inputType} id={htmlFor} name={name} value={value} onChange={onChange} />
+        <input type={inputType} id={htmlFor} name={name} value={value} onChange={(e) => {onChange(e)}}/>
 
         {!valid && errorMessege ? <span>{errorMessege}</span> : null}
       </div>
