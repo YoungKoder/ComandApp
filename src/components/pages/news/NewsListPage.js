@@ -10,6 +10,7 @@ export default class NewsListPage extends React.Component {
         super(props);
 
         this.state = {
+            isLoading: true,
             newsList: {}
         };
     }
@@ -33,7 +34,8 @@ export default class NewsListPage extends React.Component {
     getNewsList = () => {
         News.get()
         .then(newsList => newsList && this.setState({ newsList }))
-        .catch(error => console.log(error));
+        .catch(error => console.log(error))
+        .finally(() => this.setState({ isLoading:false }));
     }
 
     componentDidMount() {
@@ -41,19 +43,20 @@ export default class NewsListPage extends React.Component {
     }
 
     render() {
-        let newsItems = [];
-        Object.keys(this.state.newsList).map(newsItemid => {
-            newsItems.push(<NewsItem key={newsItemid} data={this.state.newsList[newsItemid]} />);
-        });
-        console.log('news items are ', newsItems);
         return (
-            <>
+            <>   
                 <div className={classes['news__controls']}>
                     <Button onClick={this.addNewsItem}>Add</Button>
                     <Button onClick={this.deleteNews}>Delete All</Button>
                 </div>
                 <div className={classes['news__list']}>
-                    {newsItems}
+                    { 
+                        this.state.isLoading 
+                        ? <div>Loading...</div> 
+                        : Object.keys(this.state.newsList).map(newsItemid => {
+                                return <NewsItem key={newsItemid} data={this.state.newsList[newsItemid]} />
+                          })
+                    }
                 </div>
             </>
         );
