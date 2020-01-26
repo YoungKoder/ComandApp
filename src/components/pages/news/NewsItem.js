@@ -3,9 +3,11 @@ import Input from "../../common/Input/input";
 import classes from "./NewsItem.module.css";
 
 export default function NewsItem(props) {
-    const itemClassName = props.className 
-                          ? classes.item + ' ' + props.className
-                          : classes.item;
+    let itemClassName = classes.item;
+    props.appendClassName && props.appendClassName.split(' ').forEach((className) => {
+            if (classes[className]) itemClassName += ' ' + classes[className];
+    });
+
     return (
         <>
             <div className={itemClassName}>

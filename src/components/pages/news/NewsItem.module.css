@@ -16,6 +16,14 @@
     margin-bottom: 0;
 }
 
+.list-item {
+    background-attachment: fixed;
+}
+
+.faq {
+    background-color: dodgerblue;
+}
+
 .data {
     display: flex;
     flex-direction: column;
