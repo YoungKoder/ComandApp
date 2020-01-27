@@ -4,6 +4,18 @@ import { render } from "@testing-library/react";
 import Input from "../common/Input/input";
 import Button from "../common/Button/Button";
 
+import {Auth} from "../../api/fakeApi"
+
+
+const emails = [
+  "user@mail.com",
+  "admin@mail.com"
+]
+
+const roles = [
+  "admin",
+  "reader"
+]
 export default class AuthSignup extends Component {
 
   constructor(props) {
@@ -26,7 +38,11 @@ export default class AuthSignup extends Component {
         errorMessege: "",
         isFirstPasswordControlHere: false
       },
-      formValid: false
+      formValid: false,
+      user:{
+        email:"",
+        role:""
+      }
     }
   }
 
@@ -35,7 +51,6 @@ export default class AuthSignup extends Component {
   }
 
   changeHandler = async (e) =>{
-    console.log("value is", e.target.value);
     const state = {...this.state}
     const name = e.target.name;
     const value = e.target.value;
@@ -93,14 +108,34 @@ export default class AuthSignup extends Component {
   formValidate = () => {
     this.setState({
       formValid:this.state.emailControl.valid && this.state.firstPasswordControl.valid && this.state.secondPasswordControl
-    })
+    }, this.setUserData)
   }
 
-  isPasswordsimilar = () =>{
-    if(this.state.firstPasswordControl.value === this.state.secondPasswordControl.value){
-      return true;
+  setUserData = () =>{
+    if(this.state.emailControl.value === emails[1]){
+      this.setState({
+        user: {
+          ...this.state.user,
+          email:this.state.emailControl.value,
+          role:roles[0]
+        }
+      });
+    }else{
+      this.setState({
+        user: {
+          ...this.state.user,
+          email:this.state.emailControl.value,
+          role:roles[1]
+        }
+      })
     }
-    return false;
+  }
+
+  logIn = (e) =>{
+    // console.log("user data", this.state.user)
+      Auth.signIn({email:this.state.user.email,role:this.state.user.role})
+        .then(token=> window.location.replace("/user"))
+        .catch(error => ()=>console.log("something went wrong"));
   }
 
   render(){
@@ -145,7 +180,7 @@ export default class AuthSignup extends Component {
               required
             />
             <div>
-              <Button type="submit" state="success" variant="solid" disabled={!this.state.formValid}> Confirm </Button>
+              <Button type="submit" onClick={this.logIn} state="success" variant="solid" disabled={!this.state.formValid}> Confirm </Button>
             </div>
           </form>
       </Fragment>
