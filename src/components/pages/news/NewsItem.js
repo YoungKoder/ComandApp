@@ -1,5 +1,6 @@
 import React from "react";
 import Input from "../../common/Input/input";
+import Button from "../../common/Button/Button";
 import classes from "./NewsItem.module.css";
 
 export default function NewsItem(props) {
@@ -20,6 +21,11 @@ export default function NewsItem(props) {
                     </div>
                 </div>
                 <div className={classes.controls}>
+                    {
+                        props.hasAdministrativePermissions
+                        ? <Button>Delete</Button>
+                        : null
+                    }
                 </div>
             </div>
         </>

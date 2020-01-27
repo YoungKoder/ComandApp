@@ -1,5 +1,5 @@
 import React from "react";
-import { News } from "../../../api/fakeApi";
+import { User, News } from "../../../api/fakeApi";
 import Button from "../../common/Button/Button";
 import NewsItem from "./NewsItem";
 
@@ -11,6 +11,7 @@ export default class NewsListPage extends React.Component {
 
         this.state = {
             isLoading: true,
+            hasAdministrativePermissions: false,
             newsList: {}
         };
     }
@@ -19,27 +20,29 @@ export default class NewsListPage extends React.Component {
         News.add()
         .then(newsData => {
             console.log('newsList is ', newsData[0]);
-            this.setState({newsList: newsData[0]}, () => console.log('this state is ', this.state.newsList));
+            this.setState({ newsList: newsData[0] }, () => console.log('this state is ', this.state.newsList));
         })
         .catch(error => console.log(error))
     }
 
     deleteNews = (event, newsItemId = '') => {
-        console.log('newsItemId', newsItemId);
         News.delete(newsItemId)
         .then(newsList => this.setState({ newsList }))
-        .catch(error => console.log(error));
+        .catch(error => console.error(error));
     }
 
-    getNewsList = () => {
-        News.get()
-        .then(newsList => newsList && this.setState({ newsList }))
-        .catch(error => console.log(error))
-        .finally(() => this.setState({ isLoading:false }));
+    init = () => {
+        Promise.all([User.hasAdministrativePermissions(), News.get()])
+        .then(result => this.setState({
+            hasAdministrativePermissions: result[0],
+            newsList: result[1]
+        }))
+        .catch(error => console.error(error))
+        .finally(() => this.setState({ isLoading: false }));
     }
 
     componentDidMount() {
-        this.getNewsList();
+        this.init();
     }
 
     render() {
@@ -56,6 +59,7 @@ export default class NewsListPage extends React.Component {
                         : Object.keys(this.state.newsList).map(newsItemid => {
                                 return <NewsItem key={newsItemid}
                                                  appendClassName="list-item"
+                                                 hasAdministrativePermissions={this.state.hasAdministrativePermissions}
                                                  data={this.state.newsList[newsItemid]} 
                                        />
                           })
