@@ -175,7 +175,6 @@ const FakeApi = (() => {
                Token.create(user)
                .then(token => resolve(token))
                .catch(error => reject(error))
-               .finally(() => console.log('Poshli nahuy'));
             })
         }
         
