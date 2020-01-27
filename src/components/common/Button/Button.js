@@ -22,6 +22,7 @@ const sizes = [
 
 const Button = ({
     children, 
+    customClass="",
     type="button", 
     onClick, 
     state="primary", 
@@ -61,7 +62,7 @@ const Button = ({
 
     return(
         <button 
-            className={"btn" + classesNames}
+            className={"btn" + classesNames + " "+ customClass}
             onClick={onClick}
             type={type}
             disabled={disabled}
