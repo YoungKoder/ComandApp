@@ -27,10 +27,10 @@ export default class Drobdown extends Component{
     }
 
     render(){
-        const {label,children} = this.props;
+        const {label,children, customClass=""} = this.props;
 
         return(
-            <div className="drobdown">
+            <div className={"drobdown" + " "+ customClass }>
                 <p className="drobdown__label" >
                     {label}
                 </p>

@@ -12,7 +12,7 @@ const Input = ({
     label,
     value,
     onChange,
-    customClass,
+    customClass="",
     errorMessege,
     valid = true,
     template = "stack",
