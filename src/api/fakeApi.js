@@ -152,7 +152,7 @@ const FakeApi = (() => {
             return newPromise((resolve, reject) => {
                 Token.decode()
                 .then(decoded => decoded.role === 'admin' ? resolve(true) : resolve(false))
-                .catch(error => console.error(error));
+                .catch(error => reject(error));
             })
         };
     }
