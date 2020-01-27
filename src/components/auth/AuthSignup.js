@@ -131,9 +131,9 @@ export default class AuthSignup extends Component {
     }
   }
 
-  logIn = (e) =>{
+  signUp = (e) =>{
     // console.log("user data", this.state.user)
-      Auth.signIn({email:this.state.user.email,role:this.state.user.role})
+      Auth.signUp({email:this.state.user.email,role:this.state.user.role})
         .then(token=> window.location.replace("/user"))
         .catch(error => ()=>console.log("something went wrong"));
   }
@@ -150,13 +150,13 @@ export default class AuthSignup extends Component {
       <Fragment>
           <form className="form" onSubmit={this.submitHandler}>
             <Input label="Email" 
-                  inputType="email"  
-                  name = "emailControl" 
-                  template="queue"
-                  onChange={this.changeHandler}
-                  valid={emailControl.valid}
-                  errorMessege={emailControl.errorMessege}
-                  required
+              inputType="email"  
+              name = "emailControl" 
+              template="queue"
+              onChange={this.changeHandler}
+              valid={emailControl.valid}
+              errorMessege={emailControl.errorMessege}
+              required
             />
             <Input 
               label="Password" 
@@ -180,7 +180,7 @@ export default class AuthSignup extends Component {
               required
             />
             <div>
-              <Button type="submit" onClick={this.logIn} state="success" variant="solid" disabled={!this.state.formValid}> Confirm </Button>
+              <Button type="submit" onClick={this.signUp} state="success" variant="solid" disabled={!this.state.formValid}> SignUp </Button>
             </div>
           </form>
       </Fragment>
