@@ -53,6 +53,12 @@ const Button = ({
         classesNames+= " btn--md";
     }
 
+    // if(!disabled){
+    //     classesNames+= "  disabled"
+    // }
+
+    classesNames += !disabled ? " "+null : " disabled";
+
     return(
         <button 
             className={"btn" + classesNames}
