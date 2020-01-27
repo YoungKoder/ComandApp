@@ -136,7 +136,7 @@ const FakeApi = (() => {
     }
 
     const Auth = new function() {
-
+        
     }
 
     const User = new function() {

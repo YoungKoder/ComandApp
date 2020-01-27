@@ -26,7 +26,8 @@ const Button = ({
     onClick, 
     state="primary", 
     size="md",
-    variant="solid"
+    variant="solid",
+    disabled
 }) => {
 
     let classesNames = '';
@@ -57,6 +58,7 @@ const Button = ({
             className={"btn" + classesNames}
             onClick={onClick}
             type={type}
+            disabled={disabled}
         >
             {children}
         </button>
