@@ -138,7 +138,7 @@ const FakeApi = (() => {
     }
 
     const Auth = new function() {
-        this.signIn=(userData){
+        this.signIn=(userData)=>{
             return newPromise((resolve,reject)=>{
                 Token.create(userData)
                 .then(token=>resolve(token))
