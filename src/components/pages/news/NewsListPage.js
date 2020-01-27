@@ -54,10 +54,9 @@ export default class NewsListPage extends React.Component {
                         this.state.isLoading 
                         ? <div>Loading...</div> 
                         : Object.keys(this.state.newsList).map(newsItemid => {
-                                return <NewsItem 
-                                        key={newsItemid}
-                                        appendClassName="list-item"
-                                        data={this.state.newsList[newsItemid]} 
+                                return <NewsItem key={newsItemid}
+                                                 appendClassName="list-item"
+                                                 data={this.state.newsList[newsItemid]} 
                                        />
                           })
                     }

@@ -33,7 +33,10 @@ export default class NewsItemPage extends React.Component {
                     this.state.isLoading
                     ? <div>Loading...</div>
                     : newsItemId 
-                      ? <NewsItem key={newsItemId} data={this.state.newsItem} />
+                      ? <NewsItem key={newsItemId} 
+                                  appendClassName="single-item"
+                                  data={this.state.newsItem} 
+                        />
                       : <div>Requested news was not found</div>
                 }
             </>
