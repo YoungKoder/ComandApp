@@ -23,6 +23,10 @@
     height: 100%;
 }
 
+.list-item:hover .data {
+    filter: blur(2px);
+}
+
 .input {
     height: 50px;
 }
@@ -32,18 +36,22 @@
 }
 
 .controls {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.list-item .controls {
     height: 100%;
     width: 100%;
     position: absolute;
     display: none;
-    justify-content: center;
-    align-items: center;
-}
-
-.list-item:hover .data {
-    filter: blur(2px);
 }
 
 .list-item:hover .controls {
     display: flex;
+}
+
+.single-item .controls__view {
+    display: none;
 }

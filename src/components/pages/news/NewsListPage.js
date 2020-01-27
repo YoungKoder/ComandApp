@@ -60,7 +60,13 @@ export default class NewsListPage extends React.Component {
                                 return <NewsItem key={newsItemid}
                                                  appendClassName="list-item"
                                                  hasAdministrativePermissions={this.state.hasAdministrativePermissions}
-                                                 data={this.state.newsList[newsItemid]} 
+                                                 data={this.state.newsList[newsItemid]}
+                                                 controls={[
+                                                    <Button>View</Button>,
+                                                    this.state.hasAdministrativePermissions
+                                                    ? <Button>Delete</Button>
+                                                    : null
+                                                 ]}
                                        />
                           })
                     }

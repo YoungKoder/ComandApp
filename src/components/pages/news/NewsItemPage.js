@@ -1,5 +1,6 @@
 import React from "react";
 import { User, News } from "../../../api/fakeApi";
+import Button from "../../common/Button/Button";
 import NewsItem from "./NewsItem";
 
 export default class NewsItemPage extends React.Component {
@@ -43,7 +44,14 @@ export default class NewsItemPage extends React.Component {
                       ? <NewsItem key={newsItemId} 
                                   appendClassName="single-item"
                                   hasAdministrativePermissions={this.state.hasAdministrativePermissions}
-                                  data={this.state.newsItem} 
+                                  data={this.state.newsItem}
+                                  controls={
+                                    this.state.hasAdministrativePermissions
+                                    ? <><Button>Save</Button>
+                                      <Button>Cancel</Button>
+                                      <Button>Delete</Button></>
+                                    : null
+                                  }
                         />
                       : <div>Requested news was not found</div>
                 }
