@@ -148,7 +148,13 @@ const FakeApi = (() => {
     }
 
     const User = new function() {
-
+        this.hasAdministrativePermissions = () => {
+            return newPromise((resolve, reject) => {
+                Token.decode()
+                .then(decoded => decoded.role === 'admin' ? resolve(true) : resolve(false))
+                .catch(error => reject(error));
+            })
+        };
     }
 
     const News = new function() {
