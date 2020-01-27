@@ -12,17 +12,17 @@ export default class AuthSignup extends Component {
     this.state ={
       emailControl:{
         value:"",
-        valid: true,
+        valid: false,
         errorMessege: ""
       },
       firstPasswordControl:{
         value:"",
-        valid:true,
+        valid:false,
         errorMessege: ""
       },
       secondPasswordControl:{
         value:"",
-        valid:true,
+        valid:false,
         errorMessege: "",
         isFirstPasswordControlHere: false
       },
@@ -121,6 +121,7 @@ export default class AuthSignup extends Component {
                   onChange={this.changeHandler}
                   valid={emailControl.valid}
                   errorMessege={emailControl.errorMessege}
+                  required
             />
             <Input 
               label="Password" 
@@ -130,6 +131,7 @@ export default class AuthSignup extends Component {
               onChange={this.changeHandler}
               valid={firstPasswordControl.valid}
               errorMessege={firstPasswordControl.errorMessege}
+              required
             />
             <Input 
               label="Password" 
@@ -140,9 +142,10 @@ export default class AuthSignup extends Component {
               disable = {!secondPasswordControl.isFirstPasswordControlHere}
               valid={secondPasswordControl.valid}
               errorMessege={secondPasswordControl.errorMessege}
+              required
             />
             <div>
-              <Button state="success" variant="solid" disabled={!this.state.formValid}> Confirm </Button>
+              <Button type="submit" state="success" variant="solid" disabled={!this.state.formValid}> Confirm </Button>
             </div>
           </form>
       </Fragment>
