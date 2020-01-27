@@ -107,7 +107,7 @@ export default class AuthSignup extends Component {
 
   formValidate = () => {
     this.setState({
-      formValid:this.state.emailControl.valid && this.state.firstPasswordControl.valid && this.state.secondPasswordControl
+      formValid:(this.state.emailControl.valid && this.state.firstPasswordControl.valid && this.state.secondPasswordControl.valid)
     }, this.setUserData)
   }
 
@@ -174,7 +174,7 @@ export default class AuthSignup extends Component {
               name ="secondPasswordControl" 
               template="queue"
               onChange={this.changeHandler}
-              disable = {!secondPasswordControl.isFirstPasswordControlHere}
+              
               valid={secondPasswordControl.valid}
               errorMessege={secondPasswordControl.errorMessege}
               required

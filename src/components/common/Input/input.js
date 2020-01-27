@@ -33,7 +33,7 @@ const Input = ({
       <div className={"input" + classNames}>
         {label? <label htmlFor={htmlFor}>{label}</label> :null}
 
-        <input type={inputType} id={htmlFor} name={name} value={value} onChange={(e) => {onChange(e)}}/>
+        <input  type={inputType} id={htmlFor} name={name} value={value} onChange={(e) => {onChange(e)}}/>
 
         {!valid && errorMessege ? <span>{errorMessege}</span> : null}
       </div>
