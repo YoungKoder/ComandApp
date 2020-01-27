@@ -1,6 +1,7 @@
 
 import React, { Component, Fragment } from "react";
 
+
 import "./HelloPage.css"
 
 import Button from "../../common/Button/Button";
@@ -10,50 +11,26 @@ import Drobdown from "../../common/Drobdown/DrobdownList/Drobdown";
 import Navbar from "../../layout/navbar/Navbar";
 import Sidebar from "../../layout/sidebar/Sidebar";
 
+import { Link } from "react-router-dom";
+
 export default class HelloPage extends Component {
-    state ={
-        showModal:false
-    }
     render(){
         return(
             <Fragment>
-                <Navbar/>
-                <section className="main">
-                    <Sidebar/>
-                    <div className="content">
-                        <Button 
-                            onClick={()=>{this.setState({showModal:true})}}
-                            state="error"
-                            size="lg"
-                            variant="outline"
-                            >
-                            Open Modal!
-                        </Button>
-                        <Input 
-                            label={<p>Label</p>}
-                            valid = {false}
-                            errorMessege = "Error"
-                        />
-                        <Modal
-                            isOpen={this.state.showModal}
-                            onClose={()=>{this.setState({showModal:false})}}
-                            modalContent = {<p>Something here</p>}
-                            modalFooter = {
-                                <Button state="success" size="sm" variant="outline" onClick={()=>{this.setState({showModal:false})}}>Save</Button>
-                            }
-                            locationX="right"
-                            locationY="top"
-                        />
-                        <div className="test" >
-                            <Drobdown label={<p>Label</p>}>
-                                LOGOUT
-                            </Drobdown>
+                <section className="helloPage">
+                    <div className="enterControl">
+                        <div className="enterControl__title">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/1200px-NASA_logo.svg.png" alt="logo"/>
+                        </div>
+                        <div className="enterControl__buttonControls">
+                            <Button 
+                            variant="outline">
+                                <Link to="/sign-in">Sign In</Link>
+                            </Button>
+                            <Button><Link to="/sign-up">Sign Up</Link></Button>
                         </div>
                     </div>
                 </section>
-                
-                
-                
             </Fragment>
         )
     }
