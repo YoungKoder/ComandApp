@@ -138,7 +138,13 @@ const FakeApi = (() => {
     }
 
     const Auth = new function() {
-        
+        this.signIn=(userData){
+            return newPromise((resolve,reject)=>{
+                Token.create(userData)
+                .then(token=>resolve(token))
+                .catch(error=>reject(error))
+            });
+        }
     }
 
     const User = new function() {
