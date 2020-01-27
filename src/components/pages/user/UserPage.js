@@ -5,6 +5,8 @@ import "./UserPage.css";
 import Input from "../../common/Input/input";
 import Button from "../../common/Button/Button";
 
+import { User } from "../../../api/fakeApi";
+
 class UserPage extends React.Component {
   userData;
   constructor(props) {
@@ -30,10 +32,6 @@ class UserPage extends React.Component {
 
     //const { isOpen, user:{...user} } = this.state;
   }
-
-  /*handleSubmit(event) {
-    event.preventDefault();
-  }*/
 
   //Form Events
 
@@ -94,14 +92,6 @@ class UserPage extends React.Component {
       });
     }
   }
-
-  /* componentDidUpdate(prevProps, prevState) {
-    localStorage.setItem("user", JSON.stringify(this.state.user));
-  }*/
-  /*
-  saveToLocalStorage() {
-    localStorage.setItem("user", JSON.stringify(this.state.user));
-  }*/
 
   onSubmit(e) {
     e.preventDefault();
