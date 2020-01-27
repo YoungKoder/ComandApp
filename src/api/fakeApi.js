@@ -138,13 +138,46 @@ const FakeApi = (() => {
     }
 
     const Auth = new function() {
-        this.signIn=(userData)=>{
+        this.signUp=(userData)=>{
             return newPromise((resolve,reject)=>{
                 Token.create(userData)
                 .then(token=>resolve(token))
                 .catch(error=>reject(error))
             });
         }
+        const usersDefault =  [{
+                email: "admin@admin.com",
+                password: "test123",
+                role: "admin"
+            },
+            {
+                email: "test@gmail.com",
+                password: "useruser",
+                role: "reader"
+            }
+        ];
+        this.signIn = (userSignInData) =>{
+            return newPromise((resolve,reject)=>{
+               let user;
+               usersDefault.forEach(userTmp => {
+                   if (userTmp.email !== userSignInData.email) {
+                       return;
+                   }
+                   user = userTmp; 
+               });
+               if (!user) {
+                reject("user wasn't find");
+                return;
+               }
+               if (user.password !== userSignInData.password) {
+                reject("password isn't correct");
+               }
+               Token.create(user)
+               .then(token => resolve(token))
+               .catch(error => reject(error))
+            })
+        }
+        
     }
 
     const User = new function() {

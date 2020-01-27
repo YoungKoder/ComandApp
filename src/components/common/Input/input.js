@@ -12,6 +12,7 @@ const Input = ({
     label,
     value,
     onChange,
+    customClass,
     errorMessege,
     valid = true,
     template = "stack",
@@ -30,7 +31,7 @@ const Input = ({
     }
 
     return (
-      <div className={"input" + classNames}>
+      <div className={"input" + classNames+" "+ customClass}>
         {label? <label htmlFor={htmlFor}>{label}</label> :null}
 
         <input type={inputType} id={htmlFor} name={name} value={value} onChange={(e) => {onChange(e)}}/>
