@@ -36,7 +36,7 @@ class UserPage extends React.Component {
   //Form Events
 
   saveToLocalStorage = props => {
-    User.set();
+    localStorage.setItem("user", JSON.stringify(this.state.user));
   };
 
   onChangeName(e) {

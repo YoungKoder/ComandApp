@@ -140,25 +140,7 @@ const FakeApi = (() => {
 
   const Auth = new (function() {})();
 
-  const User = new (function() {
-    this.set = (
-      user = {
-        name: "",
-        lastname: "",
-        email: "",
-        age: "",
-        gender: "male"
-      }
-    ) => {
-      return newPromise((resolve, reject) => {
-        Token.verify()
-          .then(decoded => {
-            localStorage.setItem("user", JSON.stringify(user));
-          })
-          .catch(error => reject(error));
-      });
-    };
-  })();
+  const User = new (function() {})();
 
   const News = new (function() {
     /**
