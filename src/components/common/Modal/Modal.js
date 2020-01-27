@@ -12,6 +12,7 @@ const locations = [
 ]
 const Modal = ({
     isOpen,
+    customClass="",
     onClose,
     modalContent,
     modalFooter,
@@ -31,7 +32,7 @@ const Modal = ({
     
 
     let modal = (
-        <div className={"overlay fade" + classeNames}>
+        <div className={"overlay fade" + classeNames + " " + customClass}>
             <div className="popup">
                 <div className="popup__close"><Button size="sm" onClick={onClose}>x</Button></div>
                 <div className="popup__content">
