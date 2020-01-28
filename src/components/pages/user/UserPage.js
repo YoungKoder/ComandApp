@@ -7,7 +7,7 @@ import Button from "../../common/Button/Button";
 import Navbar from "../../layout/navbar/Navbar";
 import Sidebar from "../../layout/sidebar/Sidebar";
 
-import { User } from "../../../api/fakeApi";
+import { User, Token } from "../../../api/fakeApi";
 
 class UserPage extends React.Component {
   constructor(props) {
@@ -23,12 +23,13 @@ class UserPage extends React.Component {
     this.state = {
       isOpen: false,
       componentIsLoading: true,
-      userData: {
+      user: {
         name: "",
         lastname: "",
         email: "",
         age: "",
-        gender: ""
+        gender: "",
+        password: ""
       }
     };
 
@@ -43,34 +44,47 @@ class UserPage extends React.Component {
 */
   onChangeName(e) {
     this.setState({
-      userData: Object.assign(this.state.userData, { name: e.target.value })
+      user: Object.assign(this.state.user, { name: e.target.value })
     });
   }
 
   onChangeLastName(e) {
     this.setState({
-      userData: Object.assign(this.state.userData, { lastname: e.target.value })
+      user: Object.assign(this.state.user, { lastname: e.target.value })
     });
   }
   onChangeEmail(e) {
     this.setState({
-      userData: Object.assign(this.state.userData, { email: e.target.value })
+      user: Object.assign(this.state.user, { email: e.target.value })
     });
   }
   onChangeAge(e) {
     this.setState({
-      userData: Object.assign(this.state.userData, { age: e.target.value })
+      user: Object.assign(this.state.user, { age: e.target.value })
     });
   }
 
   onChangeGender(e) {
     this.setState({
-      userData: Object.assign(this.state.userData, { gender: e.target.value })
+      user: Object.assign(this.state.user, { gender: e.target.value })
     });
   }
 
   getUserData() {
-    User.getUserData()
+    Promise.all([Token.decode(), User.getUserData()])
+      .then(result => {
+        const { email } = result[0];
+        console.log("email", email);
+        const userAdditionalData = result[1];
+        this.setState(
+          { user: Object.assign({ email }, userAdditionalData) },
+          () => console.log("this is state", this.state)
+        );
+      })
+      .catch(error => console.log(error))
+      .finally(() => this.setState({ componentIsLoading: false }));
+
+    /*User.getUserData()
       .then(userData => {
         this.setState(
           {
@@ -81,6 +95,8 @@ class UserPage extends React.Component {
       })
       .catch(error => console.error(error))
       .finally(() => this.setState({ componentIsLoading: false }));
+
+      */
   }
   componentDidMount() {
     this.getUserData();
@@ -134,27 +150,28 @@ class UserPage extends React.Component {
                     label="First Name"
                     type="text"
                     onChange={this.onChangeName}
-                    value={this.state.userData.name}
+                    value={this.state.user.name}
                   ></Input>
                   <Input
                     name="lastname"
                     label="Last Name"
                     type="text"
                     onChange={this.onChangeLastName}
-                    value={this.state.userData.lastname}
+                    value={this.state.user.lastname}
                   ></Input>
                   <Input
                     name="email"
                     label="Email"
                     type="email"
+                    value={this.state.user.email}
                     onChange={this.onChangeEmail}
-                    value={this.state.userData.email}
+                    disabled
                   ></Input>
                   <Input
                     label="Age"
                     type="number"
                     onChange={this.onChangeAge}
-                    value={this.state.userData.age}
+                    value={this.state.user.age}
                   ></Input>
 
                   <div className="userGender">
@@ -163,7 +180,7 @@ class UserPage extends React.Component {
                       type="radio"
                       name="gender"
                       value="male"
-                      checked={this.state.userData.gender === "male"}
+                      checked={this.state.user.gender === "male"}
                       onChange={this.onChangeGender}
                     />
 
@@ -172,7 +189,7 @@ class UserPage extends React.Component {
                       type="radio"
                       name="gender"
                       value="female"
-                      checked={this.state.userData.gender === "female"}
+                      checked={this.state.user.gender === "female"}
                       onChange={this.onChangeGender}
                     />
                   </div>
@@ -191,6 +208,15 @@ class UserPage extends React.Component {
                       <div>
                         <Input customClass="test" inputType="password"></Input>
                         <Input customClass="test" type="password"></Input>
+                        <Button
+                          type="button"
+                          className="btn sweep-to-right"
+                          onClick={() => {
+                            User.saveToLocalStorage(this.state.user);
+                          }}
+                        >
+                          Save
+                        </Button>
                       </div>
                     }
                   ></Modal>
