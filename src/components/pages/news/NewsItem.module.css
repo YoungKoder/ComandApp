@@ -27,10 +27,6 @@
     filter: blur(2px);
 }
 
-.input {
-    height: 50px;
-}
-
 .media {
     display: flex;
 }
@@ -50,8 +46,4 @@
 
 .list-item:hover .controls {
     display: flex;
-}
-
-.single-item .controls__view {
-    display: none;
 }

@@ -10,15 +10,44 @@ export default class NewsItemPage extends React.Component {
         this.state = {
             isLoading: true,
             hasAdministrativePermissions: false,
-            newsItem: {}
+            newsItem: {},
+            initialNewsItem: {}
         };
+    }
+
+    handleInputChange = event => {
+        this.setState({
+            newsItem: {
+                ...this.state.newsItem,
+                [event.target.name]: event.target.value 
+            }
+        });
+    }
+
+    saveChanges = () => {
+        this.setState({ isLoading:true });
+        News.update(this.props.requestNewsItemId, this.state.newsItem)
+        .catch(error => console.error(error))
+        .finally(() => this.setState({ isLoading:false }))
+    }
+
+    discardChanges = () => {
+        this.setState({ newsItem: this.state.initialNewsItem });
+    }
+
+    delete = () => {
+        this.setState({ isLoading:true });
+        News.delete(this.props.requestNewsItemId)
+        .then(() => window.history.back())
+        .catch(error => console.error(error));
     }
 
     init = () => {
         Promise.all([User.hasAdministrativePermissions(), News.get(this.props.requestNewsItemId)])
         .then(result => this.setState({
             hasAdministrativePermissions: result[0],
-            newsItem: result[1]
+            newsItem: result[1],
+            initialNewsItem: result[1]
         }))
         .catch(error => console.error(error))
         .finally(() => this.setState({ isLoading: false }));
@@ -29,29 +58,25 @@ export default class NewsItemPage extends React.Component {
     }
 
     render() {
-        console.log('newsitempage props are ', this.props);
-        // const NewsItem = this.props.NewsItem;
-        // const addNewsItem = this.props.addNewsItemFunction;
-        console.log('this news item is ', this.state.newsItem);
-        const newsItemId = Object.keys(this.state.newsItem)[0];
-        console.log('sent data ', this.state.newsItem);
+        const doesItemExist = Boolean(Object.keys(this.state.newsItem).length);
         return (
             <>
                 {
                     this.state.isLoading
                     ? <div>Loading...</div>
-                    : newsItemId 
-                      ? <NewsItem key={newsItemId} 
+                    : doesItemExist 
+                      ? <NewsItem key={this.props.requestNewsItemId} 
                                   appendClassName="single-item"
                                   hasAdministrativePermissions={this.state.hasAdministrativePermissions}
                                   data={this.state.newsItem}
                                   controls={
                                     this.state.hasAdministrativePermissions
-                                    ? <><Button>Save</Button>
-                                      <Button>Cancel</Button>
-                                      <Button>Delete</Button></>
+                                    ? <><Button onClick={this.saveChanges}>Save</Button>
+                                      <Button onClick={this.discardChanges}>Discard</Button>
+                                      <Button onClick={this.delete}>Delete</Button></>
                                     : null
                                   }
+                                  handleInputChange={this.handleInputChange}
                         />
                       : <div>Requested news was not found</div>
                 }

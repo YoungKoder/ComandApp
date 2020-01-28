@@ -18,11 +18,8 @@ export default class NewsListPage extends React.Component {
 
     addNewsItem = () => {
         News.add()
-        .then(newsData => {
-            console.log('newsList is ', newsData[0]);
-            this.setState({ newsList: newsData[0] }, () => console.log('this state is ', this.state.newsList));
-        })
-        .catch(error => console.log(error))
+        .then(newsData => this.setState({ newsList: newsData[0] }))
+        .catch(error => console.error(error))
     }
 
     deleteNews = (event, newsItemId = '') => {
@@ -31,11 +28,15 @@ export default class NewsListPage extends React.Component {
         .catch(error => console.error(error));
     }
 
+    viewNewsItem = (newsItemId) => {
+        window.location.href += '?id=' + newsItemId;
+    }
+
     init = () => {
         Promise.all([User.hasAdministrativePermissions(), News.get()])
         .then(result => this.setState({
             hasAdministrativePermissions: result[0],
-            newsList: result[1]
+            newsList: result[1] || {}
         }))
         .catch(error => console.error(error))
         .finally(() => this.setState({ isLoading: false }));
@@ -62,9 +63,9 @@ export default class NewsListPage extends React.Component {
                                                  hasAdministrativePermissions={this.state.hasAdministrativePermissions}
                                                  data={this.state.newsList[newsItemid]}
                                                  controls={[
-                                                    <Button>View</Button>,
+                                                    <Button onClick={() => this.viewNewsItem(newsItemid)}>View</Button>,
                                                     this.state.hasAdministrativePermissions
-                                                    ? <Button>Delete</Button>
+                                                    ? <Button onClick={() => this.deleteNews(null, newsItemid)}>Delete</Button>
                                                     : null
                                                  ]}
                                        />
