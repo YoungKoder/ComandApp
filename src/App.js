@@ -29,9 +29,7 @@ const App = () => {
         />
         <Route
           path="/user"
-          render={props => (
-            <ProtectedRoute {...props} Component={UserProfile} />
-          )}
+          render={props => <ProtectedRoute {...props} Component={UserPage} />}
         />
       </div>
     </Router>
