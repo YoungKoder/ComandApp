@@ -193,6 +193,21 @@ const FakeApi = (() => {
           .catch(error => reject(error));
       });
     };
+
+    this.saveToLocalStorage = userData => {
+      return newPromise((resolve, reject) => {
+        localStorage.setItem("user", JSON.stringify(userData));
+        resolve(true);
+      });
+    };
+    this.getUserData = () => {
+      return newPromise((resolve, reject) => {
+        const userData =
+          JSON.parse(localStorage.getItem("user")) ||
+          reject(new Error("There is no user data"));
+        resolve(userData);
+      });
+    };
   })();
 
   const News = new (function() {
