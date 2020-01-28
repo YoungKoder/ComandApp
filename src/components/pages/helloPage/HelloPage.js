@@ -5,11 +5,6 @@ import React, { Component, Fragment } from "react";
 import "./HelloPage.css"
 
 import Button from "../../common/Button/Button";
-import Input from "../../common/Input/input";
-import Modal from "../../common/Modal/Modal";
-import Drobdown from "../../common/Drobdown/DrobdownList/Drobdown";
-import Navbar from "../../layout/navbar/Navbar";
-import Sidebar from "../../layout/sidebar/Sidebar";
 
 import { Link } from "react-router-dom";
 
@@ -22,7 +17,7 @@ export default class HelloPage extends Component {
                         <div className="enterControl__title">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/1200px-NASA_logo.svg.png" alt="logo"/>
                         </div>
-                        <div className="enterControl__buttonControls">
+                        <div className="buttonControls enterControl__buttonControls">
                             <Button 
                             variant="outline">
                                 <Link to="/sign-in">Sign In</Link>

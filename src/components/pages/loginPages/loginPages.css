@@ -1,0 +1,29 @@
+.loginPages{
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top:0px;
+}
+.toolbar{
+    display: flex;
+    justify-content: flex-end;
+    padding:10px 20px;
+    -webkit-box-shadow: 1px 3px 5px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    1px 3px 5px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         1px 3px 5px 0px rgba(50, 50, 50, 0.75);
+}
+.toolbar__buttonControls{
+    width: 230px;
+}
+.page__content{
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+}
+.formWrapper{
+    padding:50px;
+    text-align: center;
+}
+.formWrapper h2{
+    color:#918f8a;
+    margin-bottom: 10px;
+}
