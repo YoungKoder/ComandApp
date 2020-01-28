@@ -1,5 +1,5 @@
 .navbar{
-    padding: 15px;
+    padding: 0 15px;
     background: #8e99f3;
     display: flex;
     justify-content: space-between;
@@ -8,11 +8,17 @@
 }
 .logo {
     display: inline-block;
+    /* width:100px; */
+}
+.logo img{
+    display: block;
+    width: 100%;
 }
 .logo a {
     display: block;
     font-size: 18px;
     color:#555;
+    width:100px;
     padding:0 15px;
     font-weight: 600;
 }
