@@ -17,7 +17,7 @@ export default class HelloPage extends Component {
     render(){
         return(
             <Fragment>
-                <section className="helloPage">
+                <section className="Page">
                     <div className="enterControl">
                         <div className="enterControl__title">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/1200px-NASA_logo.svg.png" alt="logo"/>
