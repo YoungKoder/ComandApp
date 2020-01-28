@@ -19,14 +19,16 @@
     position:absolute;
     display: flex;
     justify-content: center;
-    bottom:-40px;
-    padding:5px 0;
-    left:0;
-    right:0;
+    bottom:-50px;
+    width:100px;
+    padding:10px;
     background:#fff;
-    border: 1px solid #7c7b7b;
+    border-radius:5px;
 }
 
-.drobdown-menu p {
+.drobdown- menu p {
     margin-bottom:5px;
+}
+.drobdown__menu p:hover{
+    cursor:pointer;
 }
