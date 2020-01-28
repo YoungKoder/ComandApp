@@ -1,8 +1,18 @@
 import React from "react";
 
+import Auth from "../../auth/Auth";
+
+import "./loginPages.css";
+
 const SigninPage = () => {
     return (
-        <h1>SigninPage</h1>
+        <div className="Page">
+            <div className="formWrapper">
+                <Auth authForm ="signIn"/>
+            </div>
+        </div>
+        
+        
     )
 }
 

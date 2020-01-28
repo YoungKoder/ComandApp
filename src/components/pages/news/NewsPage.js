@@ -1,9 +1,26 @@
-import React, { Component } from "react"
+import React from "react";
+import Navbar from "../../layout/navbar/Navbar";
+import Sidebar from "../../layout/sidebar/Sidebar";
+import NewsItemPage from "./NewsItemPage";
+import NewsListPage from "./NewsListPage";
 
-export default class NewsPage extends Component{
-    render(){
-        return(
-            <h1>News!!!</h1>
-        )
-    }
+import classes from "./NewsPage.module.css";
+
+export default function NewsPage(props) {
+    const newsIdQueryParameter = new URLSearchParams(props.location.search).get('id');
+    return (
+        <>
+            <Navbar/>
+            <div className={classes.content}>
+                <Sidebar/>
+                <main className={classes.news}>
+                    {
+                        newsIdQueryParameter
+                        ? <NewsItemPage requestNewsItemId={newsIdQueryParameter} />
+                        : <NewsListPage />
+                    }
+                </main>
+            </div>
+        </>
+    );
 }

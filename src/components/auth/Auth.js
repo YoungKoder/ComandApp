@@ -1,8 +1,35 @@
-import React from "react";
+import React, { Fragment } from "react";
 
-const Auth = () => {
+import AuthSignup from "../auth/AuthSignup";
+import AuthSignin from "../auth/AuthSignin";
+
+const authForms=[
+    "signIn",
+    "signUp"
+]
+
+const Auth = ({
+    authForm,
+}) => {
+    console.log(authForm);
+    let isSignup=false;
+    let authSignup = <AuthSignin/>
+    // if(authForm === "signIn" && authForms.includes(authForm)){
+    //     isSignup=false;
+    // }
+
+    if(authForm == "signUp" && authForms.includes(authForm)){
+        isSignup=true;
+        authSignup=  <AuthSignup/>
+    }
+
+    
     return (
-        <h1>Auth</h1>
+        <Fragment>
+            {
+                authSignup
+            }
+        </Fragment>
     )
 }
 

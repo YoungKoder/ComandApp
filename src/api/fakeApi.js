@@ -122,7 +122,7 @@ const FakeApi = (() => {
      *
      * @returns {Promise}
      */
-    this.verify = (options = {}) => {
+    this.verify = (options = {}, forceLogout = true) => {
       return newPromise((resolve, reject) => {
         get()
           .then(token => {
@@ -132,15 +132,68 @@ const FakeApi = (() => {
             });
           })
           .catch(error => {
-            reject(error);
+            if (!forceLogout) reject(error);
+            localStorage.removeItem("token");
+            window.location.replace("/sign-in");
           });
       });
     };
   })();
 
-  const Auth = new (function() {})();
+  const Auth = new (function() {
+    this.signUp = userData => {
+      return newPromise((resolve, reject) => {
+        Token.create(userData)
+          .then(token => resolve(token))
+          .catch(error => reject(error));
+      });
+    };
+    const usersDefault = [
+      {
+        email: "admin@admin.com",
+        password: "test123",
+        role: "admin"
+      },
+      {
+        email: "test@gmail.com",
+        password: "useruser",
+        role: "reader"
+      }
+    ];
+    this.signIn = userSignInData => {
+      return newPromise((resolve, reject) => {
+        let user;
+        usersDefault.forEach(userTmp => {
+          if (userTmp.email !== userSignInData.email) {
+            return;
+          }
+          user = userTmp;
+        });
+        if (!user) {
+          reject("user wasn't find");
+          return;
+        }
+        if (user.password !== userSignInData.password) {
+          reject("password isn't correct");
+        }
+        Token.create(user)
+          .then(token => resolve(token))
+          .catch(error => reject(error));
+      });
+    };
+  })();
 
-  const User = new (function() {})();
+  const User = new (function() {
+    this.hasAdministrativePermissions = () => {
+      return newPromise((resolve, reject) => {
+        Token.decode()
+          .then(decoded =>
+            decoded.role === "admin" ? resolve(true) : resolve(false)
+          )
+          .catch(error => reject(error));
+      });
+    };
+  })();
 
   const News = new (function() {
     /**
@@ -162,12 +215,12 @@ const FakeApi = (() => {
             const newsItemId = Date.now();
             const newsItem = { [`${newsItemId}`]: newsItemData };
             const news = Object.assign(
-              newsItem,
-              JSON.parse(localStorage.getItem("news") || "{}")
+              JSON.parse(localStorage.getItem("news") || "{}"),
+              newsItem
             );
 
             localStorage.setItem("news", JSON.stringify(news));
-            resolve(newsItem, news);
+            resolve([news, newsItem]);
           })
           .catch(error => reject(error));
       });
@@ -191,7 +244,7 @@ const FakeApi = (() => {
                 reject(new Error("There is no news with such id!"));
               delete news[newsItemId];
               localStorage.setItem("news", JSON.stringify(news));
-              resolve(news);
+              return resolve(news);
             }
 
             localStorage.removeItem("news");
@@ -208,10 +261,19 @@ const FakeApi = (() => {
      */
     this.get = (newsItemId = "") => {
       return newPromise((resolve, reject) => {
-        const newsJsonString = localStorage.getItem("news");
-        if (!newsJsonString) reject(new Error("There is no news!"));
-        const news = JSON.parse(newsJsonString);
-        resolve(newsItemId ? news[newsItemId] : news);
+        Token.verify()
+          .then(decoded => {
+            const newsJsonString = localStorage.getItem("news");
+            const news = JSON.parse(newsJsonString);
+            if (newsItemId) {
+              if (!news) reject(new Error("There is no news!"));
+              if (!news[newsItemId])
+                reject(new Error("There is no news with such id!"));
+              resolve(news[newsItemId]);
+            }
+            resolve(news);
+          })
+          .catch(error => reject(error));
       });
     };
 
@@ -223,13 +285,17 @@ const FakeApi = (() => {
      */
     this.update = (newsItemId, newsItemData) => {
       return newPromise((resolve, reject) => {
-        const newsJsonString = localStorage.getItem("news");
-        const news = JSON.parse(newsJsonString);
-        if (!news[newsItemId])
-          reject(new Error("There is no news with such id"));
-        news[newsItemId] = newsItemData;
-        localStorage.setItem("news", JSON.stringify(news));
-        resolve(true);
+        Token.verify()
+          .then(decoded => {
+            const newsJsonString = localStorage.getItem("news");
+            const news = JSON.parse(newsJsonString);
+            if (!news[newsItemId])
+              reject(new Error("There is no news with such id"));
+            news[newsItemId] = newsItemData;
+            localStorage.setItem("news", JSON.stringify(news));
+            resolve(true);
+          })
+          .catch(error => reject(error));
       });
     };
   })();

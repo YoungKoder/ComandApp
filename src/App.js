@@ -10,6 +10,7 @@ import UserPage from "./components/pages/user/UserPage";
 
 /*router */
 import { BrowserRouter as Router, Route } from "react-router-dom";
+import ProtectedRoute from "./components/route/ProtectedRoute";
 
 const App = () => {
   return (
@@ -18,9 +19,20 @@ const App = () => {
         <Route path="/" exact component={HelloPage} />
         <Route path="/sign-in" component={SigninPage} />
         <Route path="/sign-up" component={SignupPage} />
-        <Route path="/news" component={NewsPage} />
-        <Route path="/events" component={EventsPage} />
-        <Route path="/user" component={UserPage} />
+        <Route
+          path="/news"
+          render={props => <ProtectedRoute {...props} Component={NewsPage} />}
+        />
+        <Route
+          path="/events"
+          render={props => <ProtectedRoute {...props} Component={EventsPage} />}
+        />
+        <Route
+          path="/user"
+          render={props => (
+            <ProtectedRoute {...props} Component={UserProfile} />
+          )}
+        />
       </div>
     </Router>
   );

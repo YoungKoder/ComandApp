@@ -1,0 +1,19 @@
+
+.enterControl{
+    text-align: center;
+}
+.enterControl__title{
+    width: 400px;
+}
+.enterControl__title img {
+    display: block;
+    width:100%;
+    margin-left: 17px;
+}
+
+.enterControl__buttonControls{
+    display:flex;
+    justify-content: space-between;
+    padding:0 80px;
+}
+/*content*/
