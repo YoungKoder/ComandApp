@@ -18,7 +18,7 @@ const Input = ({
     template = "stack",
     name
   }) => {
-
+    
     let classNames = "";
     const htmlFor = `${Math.floor(Math.random() * 10000)}`;
   

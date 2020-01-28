@@ -7,17 +7,23 @@ export default function NewsItem(props) {
     props.appendClassName && props.appendClassName.split(' ').forEach((className) => {
             if (classes[className]) itemClassName += ' ' + classes[className];
     });
-
     return (
         <>
             <div className={itemClassName}>
                 <div className={classes.data}>
-                    <Input name="title" value={props.data.title} />
-                    <textarea name="description">{props.data.description}</textarea>
-                    <div className={classes.media}></div>
+                    <Input 
+                        name="title" 
+                        value={props.data.title} 
+                        // customClass={} 
+                        onChange={props.handleInputChange}
+                    />
+                    <textarea name="description" value={props.data.description} onChange={props.handleInputChange}></textarea>
+                    <div className={classes.media}>
+                        <img src={props.data.image} />
+                    </div>
                 </div>
                 <div className={classes.controls}>
-                    <img src={props.data.image} />
+                    {props.controls}
                 </div>
             </div>
         </>

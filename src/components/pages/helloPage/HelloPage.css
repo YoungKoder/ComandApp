@@ -1,12 +1,17 @@
-.test{
-    width:200px;
+
+.enterControl{
+    text-align: center;
 }
-.main{
-    display:flex;
+.enterControl__title{
+    width: 400px;
+}
+.enterControl__title img {
+    display: block;
+    width:100%;
+    margin-left: 17px;
+}
+
+.enterControl__buttonControls{
+    padding:0 80px;
 }
 /*content*/
-.content{
-    width: 100%;
-    height:91vh;
-    overflow: auto;
-}

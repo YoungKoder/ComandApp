@@ -6,6 +6,7 @@
     margin: auto;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .item:nth-child(even) {
@@ -16,23 +17,33 @@
     margin-bottom: 0;
 }
 
-.list-item {
-    background-attachment: fixed;
-}
-
-.faq {
-    background-color: dodgerblue;
-}
-
 .data {
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
-.controls {
-    display: flex;
+.list-item:hover .data {
+    filter: blur(2px);
 }
 
 .media {
+    display: flex;
+}
+
+.controls {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.list-item .controls {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    display: none;
+}
+
+.list-item:hover .controls {
     display: flex;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { News } from "../../../api/fakeApi";
+import { User, News } from "../../../api/fakeApi";
 import Button from "../../common/Button/Button";
 import NewsItem from "./NewsItem";
 
@@ -11,35 +11,39 @@ export default class NewsListPage extends React.Component {
 
         this.state = {
             isLoading: true,
+            hasAdministrativePermissions: false,
             newsList: {}
         };
     }
 
     addNewsItem = () => {
         News.add()
-        .then(newsData => {
-            console.log('newsList is ', newsData[0]);
-            this.setState({newsList: newsData[0]}, () => console.log('this state is ', this.state.newsList));
-        })
-        .catch(error => console.log(error))
+        .then(newsData => this.setState({ newsList: newsData[0] }))
+        .catch(error => console.error(error))
     }
 
     deleteNews = (event, newsItemId = '') => {
-        console.log('newsItemId', newsItemId);
         News.delete(newsItemId)
         .then(newsList => this.setState({ newsList }))
-        .catch(error => console.log(error));
+        .catch(error => console.error(error));
     }
 
-    getNewsList = () => {
-        News.get()
-        .then(newsList => newsList && this.setState({ newsList }))
-        .catch(error => console.log(error))
-        .finally(() => this.setState({ isLoading:false }));
+    viewNewsItem = (newsItemId) => {
+        window.location.href += '?id=' + newsItemId;
+    }
+
+    init = () => {
+        Promise.all([User.hasAdministrativePermissions(), News.get()])
+        .then(result => this.setState({
+            hasAdministrativePermissions: result[0],
+            newsList: result[1] || {}
+        }))
+        .catch(error => console.error(error))
+        .finally(() => this.setState({ isLoading: false }));
     }
 
     componentDidMount() {
-        this.getNewsList();
+        this.init();
     }
 
     render() {
@@ -54,10 +58,16 @@ export default class NewsListPage extends React.Component {
                         this.state.isLoading 
                         ? <div>Loading...</div> 
                         : Object.keys(this.state.newsList).map(newsItemid => {
-                                return <NewsItem 
-                                        key={newsItemid}
-                                        appendClassName="list-item"
-                                        data={this.state.newsList[newsItemid]} 
+                                return <NewsItem key={newsItemid}
+                                                 appendClassName="list-item"
+                                                 hasAdministrativePermissions={this.state.hasAdministrativePermissions}
+                                                 data={this.state.newsList[newsItemid]}
+                                                 controls={[
+                                                    <Button onClick={() => this.viewNewsItem(newsItemid)}>View</Button>,
+                                                    this.state.hasAdministrativePermissions
+                                                    ? <Button onClick={() => this.deleteNews(null, newsItemid)}>Delete</Button>
+                                                    : null
+                                                 ]}
                                        />
                           })
                     }
