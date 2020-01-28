@@ -236,7 +236,7 @@ const FakeApi = (() => {
                         if (!news[newsItemId]) reject(new Error('There is no news with such id!'));
                         delete news[newsItemId];
                         localStorage.setItem('news', JSON.stringify(news));
-                        resolve(news);
+                        return resolve(news);
                     }
 
                     localStorage.removeItem('news');
