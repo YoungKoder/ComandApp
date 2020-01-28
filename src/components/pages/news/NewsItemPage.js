@@ -3,6 +3,8 @@ import { User, News } from "../../../api/fakeApi";
 import Button from "../../common/Button/Button";
 import NewsItem from "./NewsItem";
 
+import classes from "./NewsItemPage.module.css";
+
 export default class NewsItemPage extends React.Component {
     constructor(props) {
         super(props);
@@ -71,9 +73,20 @@ export default class NewsItemPage extends React.Component {
                                   data={this.state.newsItem}
                                   controls={
                                     this.state.hasAdministrativePermissions
-                                    ? <><Button onClick={this.saveChanges}>Save</Button>
-                                      <Button onClick={this.discardChanges}>Discard</Button>
-                                      <Button onClick={this.delete}>Delete</Button></>
+                                    ? <>
+                                        <Button customClass={classes['news-item__button']} 
+                                                onClick={this.saveChanges}>
+                                                Save
+                                        </Button>
+                                        <Button customClass={classes['news-item__button']} 
+                                                onClick={this.discardChanges}>
+                                                Discard
+                                        </Button>
+                                        <Button customClass={classes['news-item__button']} 
+                                                onClick={this.delete}>
+                                                Delete
+                                        </Button>
+                                      </>
                                     : null
                                   }
                                   handleInputChange={this.handleInputChange}
