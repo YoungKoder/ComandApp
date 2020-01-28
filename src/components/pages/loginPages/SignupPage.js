@@ -2,9 +2,16 @@ import React from "react";
 
 import Auth from "../../auth/Auth";
 
+import "./loginPages.css";
+
 const SignupPage = () => {
     return (
-        <Auth authForm ="signUp"/>
+        <div className="Page">
+            <div className="formWrapper">
+                <Auth authForm ="signUp"/>
+            </div>
+        </div>
+        
     )
 }
 
