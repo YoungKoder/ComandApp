@@ -35,3 +35,9 @@ body{
     padding-top:50px;
     overflow: hidden;
 }
+
+.buttonControls{
+    display:flex;
+    justify-content: space-between;
+   
+}
