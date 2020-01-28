@@ -3,6 +3,7 @@
 }
 .input {
     margin-bottom: 15px;
+    position:relative;
 }
 
 .input.input--queue{
@@ -32,10 +33,17 @@ margin:3px 0;
 }
 
 .input span {
+    position: absolute;
 color: #c22b41;
 font-size: 12px;
 font-weight: bold;
 }
+.input.input--queue span{
+    left:100%;
+    top:0;
+    width:200px;
+}
+
 
 .input.invalid label {
 color: #c22b41;
