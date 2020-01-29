@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import { User, News } from "../../../api/fakeApi";
 import Button from "../../common/Button/Button";
 import NewsItem from "./NewsItem";
@@ -71,7 +72,11 @@ export default class NewsItemPage extends React.Component {
                                   appendClassName="single-item"
                                   hasAdministrativePermissions={this.state.hasAdministrativePermissions}
                                   data={this.state.newsItem}
-                                  mediaControls={<input type="file" className={classes['news-item__uploader']} />}
+                                  mediaControls={
+                                    this.state.hasAdministrativePermissions
+                                    ? <input type="file" className={classes['news-item__uploader']} />
+                                    : null
+                                  }
                                   itemControls={
                                     this.state.hasAdministrativePermissions
                                     ? <>
@@ -97,4 +102,8 @@ export default class NewsItemPage extends React.Component {
             </>
         );
     }
+}
+
+NewsItemPage.propTypes = {
+    requestNewsItemId: PropTypes.string.isRequired
 }
