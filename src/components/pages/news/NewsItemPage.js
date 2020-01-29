@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import { User, News } from "../../../api/fakeApi";
 import Button from "../../common/Button/Button";
 import NewsItem from "./NewsItem";
@@ -101,4 +102,8 @@ export default class NewsItemPage extends React.Component {
             </>
         );
     }
+}
+
+NewsItemPage.propTypes = {
+    requestNewsItemId: PropTypes.string.isRequired
 }
