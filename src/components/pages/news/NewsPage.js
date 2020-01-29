@@ -27,5 +27,5 @@ export default function NewsPage(props) {
 }
 
 NewsPage.propTypes = {
-    location: PropTypes.shape({search:PropTypes.string})
+    location: PropTypes.shape({search: PropTypes.string})
 }
