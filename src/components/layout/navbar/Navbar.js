@@ -18,7 +18,9 @@ const Navbar = ()=>{
     return(
         <div className="navbar">
             <div className="logo">
-                <Link to="/content-page">Logo</Link>
+                <Link to="/news">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/1200px-NASA_logo.svg.png" alt="logo"/>
+                </Link>
             </div>
             <div className="user">
                     <Drobdown label={<span> user</span>} clickOnMenuItem={()=>clickItem()}>
