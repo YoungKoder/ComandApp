@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import  { Token }  from '../../api/fakeApi';
 
 export default class ProtectedRoute extends React.Component {
@@ -24,4 +25,8 @@ export default class ProtectedRoute extends React.Component {
             this.state.isValidToken ? <Component {...props} /> : null
         );
     }
+}
+
+ProtectedRoute.propTypes = {
+    Component: PropTypes.elementType.isRequired
 }
