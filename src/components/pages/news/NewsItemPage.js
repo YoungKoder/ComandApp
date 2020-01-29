@@ -71,7 +71,11 @@ export default class NewsItemPage extends React.Component {
                                   appendClassName="single-item"
                                   hasAdministrativePermissions={this.state.hasAdministrativePermissions}
                                   data={this.state.newsItem}
-                                  mediaControls={<input type="file" className={classes['news-item__uploader']} />}
+                                  mediaControls={
+                                    this.state.hasAdministrativePermissions
+                                    ? <input type="file" className={classes['news-item__uploader']} />
+                                    : null
+                                  }
                                   itemControls={
                                     this.state.hasAdministrativePermissions
                                     ? <>
