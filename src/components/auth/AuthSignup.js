@@ -9,7 +9,7 @@ import {Auth} from "../../api/fakeApi"
 
 const emails = [
   "user@mail.com",
-  "admin@mail.com"
+  "admin@admin.com"
 ]
 
 const roles = [
