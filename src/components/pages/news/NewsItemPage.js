@@ -3,12 +3,14 @@ import { User, News } from "../../../api/fakeApi";
 import Button from "../../common/Button/Button";
 import NewsItem from "./NewsItem";
 
+import classes from "./NewsItemPage.module.css";
+
 export default class NewsItemPage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isLoading: true,
+            componentIsLoading: true,
             hasAdministrativePermissions: false,
             newsItem: {},
             initialNewsItem: {}
@@ -25,10 +27,10 @@ export default class NewsItemPage extends React.Component {
     }
 
     saveChanges = () => {
-        this.setState({ isLoading:true });
+        this.setState({ componentIsLoading:true });
         News.update(this.props.requestNewsItemId, this.state.newsItem)
         .catch(error => console.error(error))
-        .finally(() => this.setState({ isLoading:false }))
+        .finally(() => this.setState({ componentIsLoading:false }))
     }
 
     discardChanges = () => {
@@ -36,7 +38,7 @@ export default class NewsItemPage extends React.Component {
     }
 
     delete = () => {
-        this.setState({ isLoading:true });
+        this.setState({ componentIsLoading:true });
         News.delete(this.props.requestNewsItemId)
         .then(() => window.history.back())
         .catch(error => console.error(error));
@@ -50,7 +52,7 @@ export default class NewsItemPage extends React.Component {
             initialNewsItem: result[1]
         }))
         .catch(error => console.error(error))
-        .finally(() => this.setState({ isLoading: false }));
+        .finally(() => this.setState({ componentIsLoading: false }));
     }
 
     componentDidMount() {
@@ -62,18 +64,30 @@ export default class NewsItemPage extends React.Component {
         return (
             <>
                 {
-                    this.state.isLoading
+                    this.state.componentIsLoading
                     ? <div>Loading...</div>
                     : doesItemExist 
                       ? <NewsItem key={this.props.requestNewsItemId} 
                                   appendClassName="single-item"
                                   hasAdministrativePermissions={this.state.hasAdministrativePermissions}
                                   data={this.state.newsItem}
-                                  controls={
+                                  mediaControls={<input type="file" className={classes['news-item__uploader']} />}
+                                  itemControls={
                                     this.state.hasAdministrativePermissions
-                                    ? <><Button onClick={this.saveChanges}>Save</Button>
-                                      <Button onClick={this.discardChanges}>Discard</Button>
-                                      <Button onClick={this.delete}>Delete</Button></>
+                                    ? <>
+                                        <Button customClass={classes['news-item__button']} 
+                                                onClick={this.saveChanges}>
+                                                Save
+                                        </Button>
+                                        <Button customClass={classes['news-item__button']} 
+                                                onClick={this.discardChanges}>
+                                                Discard
+                                        </Button>
+                                        <Button customClass={classes['news-item__button']} 
+                                                onClick={this.delete}>
+                                                Delete
+                                        </Button>
+                                      </>
                                     : null
                                   }
                                   handleInputChange={this.handleInputChange}
