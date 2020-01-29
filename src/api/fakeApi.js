@@ -235,7 +235,7 @@ const FakeApi = (() => {
             );
 
             localStorage.setItem("news", JSON.stringify(news));
-            resolve([news, newsItem]);
+            resolve(news);
           })
           .catch(error => reject(error));
       });

@@ -10,7 +10,7 @@ export default class NewsItemPage extends React.Component {
         super(props);
 
         this.state = {
-            isLoading: true,
+            componentIsLoading: true,
             hasAdministrativePermissions: false,
             newsItem: {},
             initialNewsItem: {}
@@ -27,10 +27,10 @@ export default class NewsItemPage extends React.Component {
     }
 
     saveChanges = () => {
-        this.setState({ isLoading:true });
+        this.setState({ componentIsLoading:true });
         News.update(this.props.requestNewsItemId, this.state.newsItem)
         .catch(error => console.error(error))
-        .finally(() => this.setState({ isLoading:false }))
+        .finally(() => this.setState({ componentIsLoading:false }))
     }
 
     discardChanges = () => {
@@ -38,7 +38,7 @@ export default class NewsItemPage extends React.Component {
     }
 
     delete = () => {
-        this.setState({ isLoading:true });
+        this.setState({ componentIsLoading:true });
         News.delete(this.props.requestNewsItemId)
         .then(() => window.history.back())
         .catch(error => console.error(error));
@@ -52,7 +52,7 @@ export default class NewsItemPage extends React.Component {
             initialNewsItem: result[1]
         }))
         .catch(error => console.error(error))
-        .finally(() => this.setState({ isLoading: false }));
+        .finally(() => this.setState({ componentIsLoading: false }));
     }
 
     componentDidMount() {
@@ -64,14 +64,15 @@ export default class NewsItemPage extends React.Component {
         return (
             <>
                 {
-                    this.state.isLoading
+                    this.state.componentIsLoading
                     ? <div>Loading...</div>
                     : doesItemExist 
                       ? <NewsItem key={this.props.requestNewsItemId} 
                                   appendClassName="single-item"
                                   hasAdministrativePermissions={this.state.hasAdministrativePermissions}
                                   data={this.state.newsItem}
-                                  controls={
+                                  mediaControls={<input type="file" className={classes['news-item__uploader']} />}
+                                  itemControls={
                                     this.state.hasAdministrativePermissions
                                     ? <>
                                         <Button customClass={classes['news-item__button']} 
