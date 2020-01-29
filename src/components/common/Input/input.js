@@ -10,6 +10,7 @@ const templates = [
 const Input = ({
     inputType = "text",
     label,
+    disabled=false,
     value,
     onChange,
     customClass="",
@@ -34,7 +35,7 @@ const Input = ({
       <div className={"input" + classNames+" "+ customClass}>
         {label? <label htmlFor={htmlFor}>{label}</label> :null}
 
-        <input type={inputType} id={htmlFor} name={name} value={value} onChange={(e) => {onChange(e)}}/>
+        <input disabled={disabled} type={inputType} id={htmlFor} name={name} value={value} onChange={(e) => {onChange(e)}}/>
 
         {!valid && errorMessege ? <span>{errorMessege}</span> : null}
       </div>
