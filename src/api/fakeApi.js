@@ -151,13 +151,11 @@ const FakeApi = (() => {
         localStorage.setItem('users', JSON.stringify([
           {
             email: "admin@admin.com",
-            password: "test123",
-            role: "admin"
+            password: "test123"
           },
           {
             email: "test@gmail.com",
-            password: "useruser",
-            role: "reader"
+            password: "useruser"
           }
         ]));
       }
