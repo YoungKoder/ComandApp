@@ -145,7 +145,7 @@ const FakeApi = (() => {
     /**
      * Initialize default users data if there is no in localStorage
      */
-    (() => {
+    const usersDataInit = () => {
       const usersExist = Boolean(localStorage.getItem('users'));
       if (!usersExist) {
         localStorage.setItem('users', JSON.stringify([
@@ -161,10 +161,11 @@ const FakeApi = (() => {
           }
         ]));
       }
-    })();
+    }
 
     this.signUp = userData => {
       return newPromise((resolve, reject) => {
+        usersDataInit();
         const users = JSON.parse(localStorage.getItem('users'));
         const userExists = users.find(user => user.email === userData.email);
         if (userExists) return reject(new Error("This email already in use"));
@@ -181,6 +182,7 @@ const FakeApi = (() => {
     
     this.signIn = userData => {
       return newPromise((resolve, reject) => {
+        usersDataInit();
         const users = JSON.parse(localStorage.getItem('users'));
         const userRecord = users.find(user => user.email === userData.email && user.password === userData.password);
         if (!userRecord) return reject(new Error("Provided incorrect sign in data!"));
