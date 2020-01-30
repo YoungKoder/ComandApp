@@ -133,12 +133,15 @@ export default class AuthSignup extends Component {
   }
 
   signUp = (e) =>{
-      Auth.signUp({email:this.state.user.email,role:this.state.user.role})
-        .then(token=> window.location.replace("/user"))
-        // .catch(error => console.log(error))
-        .catch(error => this.setState({
-          formErrors: error
-        }))
+      Auth.signUp({
+        email:this.state.user.email, 
+        password: this.state.firstPasswordControl.value, 
+        role:this.state.user.role
+      })
+      .then(token=> window.location.replace("/user"))
+      .catch(error => this.setState({
+        formErrors: error
+      }));
   }
 
   render(){
