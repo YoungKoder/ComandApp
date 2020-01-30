@@ -41,10 +41,6 @@ class UserPage extends React.Component {
 
   //Form Events
 
-  /*saveToLocalStorage = props => {
-    localStorage.setItem("user", JSON.stringify(this.state.userData));
-  };
-*/
   onChangeName(e) {
     this.setState({
       user: Object.assign(this.state.user, { name: e.target.value })
