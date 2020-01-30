@@ -168,9 +168,9 @@ const FakeApi = (() => {
         const userExists = users.find(user => user.email === userData.email);
         if (userExists) return reject(new Error("This email already in use"));
 
+        delete userData.password;
         users.push(userData);
         localStorage.setItem('users', JSON.stringify(users));
-        delete userData.password;
    
         Token.create(userData)
         .then(token => resolve(token))
