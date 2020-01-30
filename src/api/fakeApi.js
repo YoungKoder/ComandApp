@@ -141,13 +141,7 @@ const FakeApi = (() => {
   })();
 
   const Auth = new (function() {
-    this.signUp = userData => {
-      return newPromise((resolve, reject) => {
-        Token.create(userData)
-          .then(token => resolve(token))
-          .catch(error => reject(error));
-      });
-    };
+
     const usersDefault = [
       {
         email: "admin@admin.com",
@@ -160,6 +154,22 @@ const FakeApi = (() => {
         role: "reader"
       }
     ];
+
+    this.signUp = userData => {
+      return newPromise((resolve, reject) => {
+        let userIsExist = usersDefault.find(user => user.email === userData.email);
+        console.log(!!userIsExist)
+        if(!!userIsExist){
+          console.log("I am here");
+          reject("this email already in use");
+        }
+
+        Token.create(userData)
+          .then(token => resolve(token))
+          .catch(error => reject(error));
+      });
+    };
+    
     this.signIn = userSignInData => {
       return newPromise((resolve, reject) => {
         let user;
@@ -181,6 +191,19 @@ const FakeApi = (() => {
           .catch(error => reject(error));
       });
     };
+
+    // this.doesUserAlreadyExist = (userSignUpData)=>{
+    //   return newPromise((resolve,reject)=>{
+    //     let userIsExist = usersDefault.find(user => user.email === userSignUpData.email);
+    //     if(userIsExist){
+    //       reject(new Error("this email already in use"));
+    //     }
+    //     resolve(userSignUpData)
+    //     // Token.create(userSignUpData)
+    //     //   .then(token => resolve(token))
+    //     //   .catch(error => reject(error));
+    //   });
+    // };
   })();
 
   const User = new (function() {
