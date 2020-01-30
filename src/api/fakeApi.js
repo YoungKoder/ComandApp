@@ -225,9 +225,10 @@ const FakeApi = (() => {
     };
     this.getUserData = () => {
       return newPromise((resolve, reject) => {
-        const userData =
-          JSON.parse(localStorage.getItem("user")) ||
-          reject(new Error("There is no user data"));
+        console.log(localStorage.getItem("user"));
+        const userData = JSON.parse(localStorage.getItem("user") || "{}");
+
+        if (!userData) reject(new Error("There is no user data"));
         resolve(userData);
       });
     };
