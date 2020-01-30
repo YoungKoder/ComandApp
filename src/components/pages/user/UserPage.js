@@ -18,6 +18,8 @@ class UserPage extends React.Component {
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangeAge = this.onChangeAge.bind(this);
     this.onChangeGender = this.onChangeGender.bind(this);
+    this.onChangePassword = this.onChangePassword.bind(this);
+    this.onChangeInitialPassword = this.onChangeInitialPassword.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
@@ -29,7 +31,8 @@ class UserPage extends React.Component {
         email: "",
         age: "",
         gender: "",
-        password: ""
+        password: "",
+        initialPassword: "useruser"
       }
     };
 
@@ -63,6 +66,17 @@ class UserPage extends React.Component {
       user: Object.assign(this.state.user, { age: e.target.value })
     });
   }
+  onChangePassword(e) {
+    this.setState({
+      user: Object.assign(this.state.user, { password: e.target.value })
+    });
+  }
+
+  onChangeInitialPassword(e) {
+    this.setState({
+      user: Object.assign(this.state.user, { initialPassword: e.target.value })
+    });
+  }
 
   onChangeGender(e) {
     this.setState({
@@ -77,7 +91,15 @@ class UserPage extends React.Component {
         console.log("email", email);
         const userAdditionalData = result[1];
         this.setState(
-          { user: Object.assign({ email }, userAdditionalData) },
+          {
+            user: Object.assign(
+              { email },
+              Object.assign(
+                { initialPassword: userAdditionalData.password },
+                userAdditionalData
+              )
+            )
+          },
           () => console.log("this is state", this.state)
         );
       })
@@ -100,39 +122,13 @@ class UserPage extends React.Component {
   }
   componentDidMount() {
     this.getUserData();
-    /*this.userData = JSON.parse(localStorage.getItem("user"));
-
-    if (localStorage.getItem("user")) {
-      this.setState({
-        userData: {
-          name: this.userData.name,
-          lastname: this.userData.lastname,
-          email: this.userData.email,
-          age: this.userData.age,
-          gender: this.userData.gender
-        }
-      });
-    } else {
-      this.setState({
-        user: {
-          name: "",
-          lastname: "",
-          email: "",
-          age: "",
-          gender: ""
-        }
-      });
-    }*/
   }
 
   onSubmit(e) {
     e.preventDefault();
-
-    //console.log(this.state.props);
   }
 
   render() {
-    //console.log("userInfo", userInfo);
     return (
       <React.Fragment>
         <Navbar></Navbar>
@@ -146,52 +142,59 @@ class UserPage extends React.Component {
               ) : (
                 <form onSubmit={this.onSubmit}>
                   <Input
+                    customClass="input-field"
                     name="name"
                     label="First Name"
-                    type="text"
+                    inputType="text"
                     onChange={this.onChangeName}
                     value={this.state.user.name}
                   ></Input>
                   <Input
+                    customClass="input-field"
                     name="lastname"
                     label="Last Name"
-                    type="text"
+                    inputType="text"
                     onChange={this.onChangeLastName}
                     value={this.state.user.lastname}
                   ></Input>
                   <Input
+                    customClass="input-field"
                     name="email"
                     label="Email"
-                    type="email"
+                    inputType="email"
                     value={this.state.user.email}
                     onChange={this.onChangeEmail}
                     disabled
                   ></Input>
                   <Input
+                    customClass="input-field"
                     label="Age"
-                    type="number"
+                    inputType="number"
                     onChange={this.onChangeAge}
                     value={this.state.user.age}
                   ></Input>
 
                   <div className="userGender">
-                    <label htmlFor="gender"> Male</label>
-                    <input
-                      type="radio"
-                      name="gender"
-                      value="male"
-                      checked={this.state.user.gender === "male"}
-                      onChange={this.onChangeGender}
-                    />
-
-                    <label htmlFor="gender">Female</label>
-                    <input
-                      type="radio"
-                      name="gender"
-                      value="female"
-                      checked={this.state.user.gender === "female"}
-                      onChange={this.onChangeGender}
-                    />
+                    <div className="userGender_male">
+                      <Input
+                        label="Male"
+                        inputType="radio"
+                        name="gender"
+                        value="male"
+                        checked={this.state.user.gender === "male"}
+                        onChange={this.onChangeGender}
+                      />
+                    </div>
+                    <div className="userGender_female">
+                      <Input
+                        label="Female"
+                        inputType="radio"
+                        name="gender"
+                        value="female"
+                        checked={this.state.user.gender === "female"}
+                        onChange={this.onChangeGender}
+                      />
+                    </div>
                   </div>
 
                   <Button
@@ -206,8 +209,23 @@ class UserPage extends React.Component {
                     onClose={e => this.setState({ isOpen: false })}
                     modalContent={
                       <div>
-                        <Input customClass="test" inputType="password"></Input>
-                        <Input customClass="test" type="password"></Input>
+                        <Input
+                          customClass="input-field"
+                          inputType="text"
+                          label="Enter your password"
+                          name="initialPassword"
+                          onChange={this.onChangeInitialPassword}
+                          value={this.state.user.initialPassword}
+                        ></Input>
+                        <Input
+                          customClass="input-field"
+                          inputType="text"
+                          label="Enter your new password"
+                          name="password"
+                          onChange={this.onChangePassword}
+                          value={this.state.user.password}
+                        ></Input>
+
                         <Button
                           type="button"
                           className="btn sweep-to-right"
@@ -225,7 +243,7 @@ class UserPage extends React.Component {
                     type="button"
                     className="btn sweep-to-right"
                     onClick={() => {
-                      User.saveToLocalStorage(this.state.userData);
+                      User.saveToLocalStorage(this.state.user);
                     }}
                   >
                     Save
