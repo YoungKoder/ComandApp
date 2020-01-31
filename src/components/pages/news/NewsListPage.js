@@ -10,7 +10,7 @@ export default class NewsListPage extends React.Component {
         super(props);
 
         this.state = {
-            isLoading: true,
+            componentIsLoading: true,
             hasAdministrativePermissions: false,
             newsList: {}
         };
@@ -18,7 +18,7 @@ export default class NewsListPage extends React.Component {
 
     addNewsItem = () => {
         News.add()
-        .then(newsData => this.setState({ newsList: newsData[0] }))
+        .then(newsList => this.setState({ newsList }))
         .catch(error => console.error(error))
     }
 
@@ -39,7 +39,7 @@ export default class NewsListPage extends React.Component {
             newsList: result[1] || {}
         }))
         .catch(error => console.error(error))
-        .finally(() => this.setState({ isLoading: false }));
+        .finally(() => this.setState({ componentIsLoading: false }));
     }
 
     componentDidMount() {
@@ -48,29 +48,41 @@ export default class NewsListPage extends React.Component {
 
     render() {
         return (
-            <>   
-                <div className={classes['news__controls']}>
-                    <Button onClick={this.addNewsItem}>Add</Button>
-                    <Button onClick={this.deleteNews}>Delete All</Button>
-                </div>
-                <div className={classes['news__list']}>
-                    { 
-                        this.state.isLoading 
-                        ? <div>Loading...</div> 
-                        : Object.keys(this.state.newsList).map(newsItemid => {
+            <>  
+                <div className={classes['news-list']}> 
+                    {
+                        this.state.hasAdministrativePermissions
+                        ? <div className={classes['news-list__controls']}>
+                            <Button onClick={this.addNewsItem}>Add</Button>
+                            <Button onClick={this.deleteNews}>Delete All</Button>
+                          </div>
+                        : null
+                    }
+                    <div className={classes['news-list__items']}>
+                        { 
+                            this.state.componentIsLoading 
+                            ? <div>Loading...</div> 
+                            : Object.keys(this.state.newsList).map(newsItemid => {console.log('KEYS IS ',newsItemid );
                                 return <NewsItem key={newsItemid}
                                                  appendClassName="list-item"
                                                  hasAdministrativePermissions={this.state.hasAdministrativePermissions}
                                                  data={this.state.newsList[newsItemid]}
-                                                 controls={[
-                                                    <Button onClick={() => this.viewNewsItem(newsItemid)}>View</Button>,
+                                                 itemControls={[
+                                                    <Button key={newsItemid + 1} customClass={classes['news-item__button']} 
+                                                            onClick={() => this.viewNewsItem(newsItemid)}>
+                                                            View
+                                                    </Button>,
                                                     this.state.hasAdministrativePermissions
-                                                    ? <Button onClick={() => this.deleteNews(null, newsItemid)}>Delete</Button>
+                                                    ? <Button key={newsItemid + 2} customClass={classes['news-item__button']} 
+                                                                onClick={() => this.deleteNews(null, newsItemid)}>
+                                                                Delete
+                                                      </Button>
                                                     : null
                                                  ]}
-                                       />
-                          })
-                    }
+                                        />
+                            })
+                        }
+                    </div>
                 </div>
             </>
         );

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import Navbar from "../../layout/navbar/Navbar";
 import Sidebar from "../../layout/sidebar/Sidebar";
 import NewsItemPage from "./NewsItemPage";
@@ -23,4 +24,8 @@ export default function NewsPage(props) {
             </div>
         </>
     );
+}
+
+NewsPage.propTypes = {
+    location: PropTypes.shape({search:PropTypes.string})
 }

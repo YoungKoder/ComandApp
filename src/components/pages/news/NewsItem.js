@@ -1,31 +1,59 @@
 import React from "react";
+import PropTypes, { arrayOf } from 'prop-types';
 import Input from "../../common/Input/input";
+
 import classes from "./NewsItem.module.css";
 
-export default function NewsItem(props) {
-    let itemClassName = classes.item;
-    props.appendClassName && props.appendClassName.split(' ').forEach((className) => {
-            if (classes[className]) itemClassName += ' ' + classes[className];
+export default function NewsItem({
+        appendClassName,
+        data,
+        handleInputChange = () => {},
+        mediaControls,
+        itemControls
+    }) {
+
+    let itemClassName = classes['news-item'];
+    appendClassName && appendClassName.split(' ').forEach((className) => {
+        if (classes[className]) itemClassName += ' ' + classes[className];
     });
+
     return (
         <>
             <div className={itemClassName}>
-                <div className={classes.data}>
-                    <Input 
-                        name="title" 
-                        value={props.data.title} 
-                        // customClass={} 
-                        onChange={props.handleInputChange}
+                <div className={classes['news-item__data']}>
+                    <Input name="title" 
+                           value={data.title} 
+                           customClass={`${classes['news-item__title']} ${classes['font-size--medium']}`}
+                           onChange={handleInputChange}
                     />
-                    <textarea name="description" value={props.data.description} onChange={props.handleInputChange}></textarea>
-                    <div className={classes.media}>
-                        <img src={props.data.image} />
+                    <textarea className={`${classes['news-item__description']} ${classes['font-size--small']}`} 
+                              name="description"
+                              value={data.description}
+                              onChange={handleInputChange}>
+                    </textarea>
+                    <div className={classes['news-item__media']}>
+                        <img className={classes['news-item__image']} src={data.image} />
+                        {mediaControls}
                     </div>
                 </div>
-                <div className={classes.controls}>
-                    {props.controls}
+                <div className={classes['news-item__controls']}>
+                    {itemControls}
                 </div>
             </div>
         </>
     );
 }
+
+NewsItem.propTypes = {
+    appendClassName: PropTypes.string,
+    data: PropTypes.objectOf(PropTypes.string).isRequired,
+    handleInputChange: PropTypes.func,
+    mediaControls: PropTypes.oneOfType([
+        PropTypes.element, 
+        arrayOf(PropTypes.element)
+    ]),
+    itemControls: PropTypes.oneOfType([
+        PropTypes.element, 
+        arrayOf(PropTypes.element)
+    ]).isRequired
+};

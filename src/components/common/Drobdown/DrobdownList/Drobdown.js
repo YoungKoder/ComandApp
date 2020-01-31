@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import "./Drobdown.css";
+
 
 export default class Drobdown extends Component{
 
@@ -27,12 +28,13 @@ export default class Drobdown extends Component{
     }
 
     render(){
-        const {label,children, customClass=""} = this.props;
+        const {label,children, customClass="", clickOnMenuItem} = this.props;
 
         return(
             <div className={"drobdown" + " "+ customClass }>
                 <p className="drobdown__label" >
-                    {label}
+                   {label}
+                    
                 </p>
                 <p className="drobdown__button" onClick={this.toShowMenu}>
                     <i className="fas fa-sort-down"></i>
@@ -40,7 +42,7 @@ export default class Drobdown extends Component{
                 {
                     this.state.showMenu ?
                     (
-                        <div className="drobdown__menu">{children}</div>
+                        <div className="drobdown__menu"><p onClick={clickOnMenuItem}>{children}</p></div>
                     )
                     :(null)
                 }

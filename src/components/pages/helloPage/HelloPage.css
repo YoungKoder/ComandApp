@@ -12,8 +12,6 @@
 }
 
 .enterControl__buttonControls{
-    display:flex;
-    justify-content: space-between;
     padding:0 80px;
 }
 /*content*/
