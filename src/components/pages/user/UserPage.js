@@ -6,20 +6,15 @@ import Input from "../../common/Input/input";
 import Button from "../../common/Button/Button";
 import Navbar from "../../layout/navbar/Navbar";
 import Sidebar from "../../layout/sidebar/Sidebar";
-
+import ChangePasswordPage from "./ChangePasswordPage";
 import { User, Token } from "../../../api/fakeApi";
+import { func } from "prop-types";
 
 class UserPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.onChangeName = this.onChangeName.bind(this);
-    this.onChangeLastName = this.onChangeLastName.bind(this);
-    this.onChangeEmail = this.onChangeEmail.bind(this);
-    this.onChangeAge = this.onChangeAge.bind(this);
-    this.onChangeGender = this.onChangeGender.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
-    this.onChangeInitialPassword = this.onChangeInitialPassword.bind(this);
+    this.onChangeUserData = this.onChangeUserData.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
@@ -31,9 +26,7 @@ class UserPage extends React.Component {
         lastname: "",
         email: "",
         age: "",
-        gender: "",
-        password: "",
-        initialPassword: "useruser"
+        gender: ""
       }
     };
 
@@ -42,43 +35,16 @@ class UserPage extends React.Component {
 
   //Form Events
 
-  onChangeName(e) {
-    this.setState({
-      user: Object.assign(this.state.user, { name: e.target.value })
-    });
-  }
-
-  onChangeLastName(e) {
-    this.setState({
-      user: Object.assign(this.state.user, { lastname: e.target.value })
-    });
-  }
-  onChangeEmail(e) {
-    this.setState({
-      user: Object.assign(this.state.user, { email: e.target.value })
-    });
-  }
-  onChangeAge(e) {
-    this.setState({
-      user: Object.assign(this.state.user, { age: e.target.value })
-    });
-  }
-  onChangePassword(e) {
-    this.setState({
-      user: Object.assign(this.state.user, { password: e.target.value })
-    });
-  }
-
-  onChangeInitialPassword(e) {
-    this.setState({
-      user: Object.assign(this.state.user, { initialPassword: e.target.value })
-    });
-  }
-
-  onChangeGender(e) {
-    this.setState({
-      user: Object.assign(this.state.user, { gender: e.target.value })
-    });
+  onChangeUserData(e) {
+    const value = e.target.value;
+    const name = e.target.name;
+    this.setState(prevState => ({
+      ...prevState,
+      user: {
+        ...prevState.user,
+        [name]: value
+      }
+    }));
   }
 
   getUserData() {
@@ -86,37 +52,26 @@ class UserPage extends React.Component {
       .then(result => {
         const { email } = result[0];
         console.log("email", email);
-        const userAdditionalData = result[1];
         this.setState(
           {
-            user: Object.assign(
-              { email },
-              Object.assign(
-                { initialPassword: userAdditionalData.password },
-                userAdditionalData
-              )
-            )
+            user: Object.assign({ email })
           },
           () => console.log("this is state", this.state)
         );
       })
       .catch(error => console.log(error))
       .finally(() => this.setState({ componentIsLoading: false }));
-
-    /*User.getUserData()
-      .then(userData => {
-        this.setState(
-          {
-            userData
-          },
-          () => console.log("This state", this.state)
-        );
-      })
-      .catch(error => console.error(error))
-      .finally(() => this.setState({ componentIsLoading: false }));
-
-      */
   }
+
+  getUserPassword() {
+    const users = JSON.parse(localStorage.getItem("users"));
+    const usersTakePassword = users.map(function(item) {
+      return item.id;
+    });
+    console.log(usersTakePassword, "usersTakePassword");
+  }
+
+  changeuserPassword() {}
   componentDidMount() {
     this.getUserData();
   }
@@ -143,7 +98,7 @@ class UserPage extends React.Component {
                     name="name"
                     label="First Name"
                     inputType="text"
-                    onChange={this.onChangeName}
+                    onChange={this.onChangeUserData}
                     value={this.state.user.name}
                   ></Input>
                   <Input
@@ -151,7 +106,7 @@ class UserPage extends React.Component {
                     name="lastname"
                     label="Last Name"
                     inputType="text"
-                    onChange={this.onChangeLastName}
+                    onChange={this.onChangeUserData}
                     value={this.state.user.lastname}
                   ></Input>
                   <Input
@@ -159,15 +114,16 @@ class UserPage extends React.Component {
                     name="email"
                     label="Email"
                     inputType="email"
+                    onChange={this.onChangeUserData}
                     value={this.state.user.email}
-                    onChange={this.onChangeEmail}
                     disabled
                   ></Input>
                   <Input
+                    name="age"
                     customClass="input-field"
                     label="Age"
                     inputType="number"
-                    onChange={this.onChangeAge}
+                    onChange={this.onChangeUserData}
                     value={this.state.user.age}
                   ></Input>
 
@@ -179,7 +135,7 @@ class UserPage extends React.Component {
                         name="gender"
                         value="male"
                         checked={this.state.user.gender === "male"}
-                        onChange={this.onChangeGender}
+                        onChange={this.onChangeUserData}
                       />
                     </div>
                     <div className="userGender_female">
@@ -189,7 +145,7 @@ class UserPage extends React.Component {
                         name="gender"
                         value="female"
                         checked={this.state.user.gender === "female"}
-                        onChange={this.onChangeGender}
+                        onChange={this.onChangeUserData}
                       />
                     </div>
                   </div>
@@ -204,36 +160,7 @@ class UserPage extends React.Component {
                   <Modal
                     isOpen={this.state.isOpen}
                     onClose={e => this.setState({ isOpen: false })}
-                    modalContent={
-                      <div>
-                        <Input
-                          customClass="input-field"
-                          inputType="text"
-                          label="Enter your password"
-                          name="initialPassword"
-                          onChange={this.onChangeInitialPassword}
-                          value={this.state.user.initialPassword}
-                        ></Input>
-                        <Input
-                          customClass="input-field"
-                          inputType="text"
-                          label="Enter your new password"
-                          name="password"
-                          onChange={this.onChangePassword}
-                          value={this.state.user.password}
-                        ></Input>
-
-                        <Button
-                          type="button"
-                          className="btn sweep-to-right"
-                          onClick={() => {
-                            User.saveToLocalStorage(this.state.user);
-                          }}
-                        >
-                          Save
-                        </Button>
-                      </div>
-                    }
+                    modalContent={<ChangePasswordPage></ChangePasswordPage>}
                   ></Modal>
 
                   <Button

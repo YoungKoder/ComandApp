@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { func } from "prop-types";
 
 /**
  * Initialize fakeApi as a global variable
@@ -140,57 +141,65 @@ const FakeApi = (() => {
     };
   })();
 
-  const Auth = new function() {
-
+  const Auth = new (function() {
     /**
      * Initialize default users data if there is no in localStorage
      */
     const usersDataInit = () => {
-      const usersExist = Boolean(localStorage.getItem('users'));
+      const usersExist = Boolean(localStorage.getItem("users"));
       if (!usersExist) {
-        localStorage.setItem('users', JSON.stringify([
-          {
-            email: "admin@admin.com",
-            password: "test123"
-          },
-          {
-            email: "test@gmail.com",
-            password: "useruser"
-          }
-        ]));
+        localStorage.setItem(
+          "users",
+          JSON.stringify([
+            {
+              id: "1",
+              email: "admin@admin.com",
+              password: "test123"
+            },
+            {
+              id: "2",
+              email: "test@gmail.com",
+              password: "useruser"
+            }
+          ])
+        );
       }
-    }
+    };
 
     this.signUp = userData => {
       return newPromise((resolve, reject) => {
         usersDataInit();
-        const users = JSON.parse(localStorage.getItem('users'));
+        const users = JSON.parse(localStorage.getItem("users"));
         const userExists = users.find(user => user.email === userData.email);
         if (userExists) return reject(new Error("This email already in use"));
-       
-        users.push({email: userData.email, password: userData.password});
-        localStorage.setItem('users', JSON.stringify(users));
-        delete userData.password;     
-   
-        Token.create(userData)
-        .then(token => resolve(token))
-        .catch(error => reject(error));
-      });
-    };
-    
-    this.signIn = userData => {
-      return newPromise((resolve, reject) => {
-        usersDataInit();
-        const users = JSON.parse(localStorage.getItem('users'));
-        const userRecord = users.find(user => user.email === userData.email && user.password === userData.password);
-        if (!userRecord) return reject(new Error("Provided incorrect sign in data!"));
+
+        users.push({ email: userData.email, password: userData.password });
+        localStorage.setItem("users", JSON.stringify(users));
+        delete userData.password;
 
         Token.create(userData)
           .then(token => resolve(token))
           .catch(error => reject(error));
       });
     };
-  };
+
+    this.signIn = userData => {
+      return newPromise((resolve, reject) => {
+        usersDataInit();
+        const users = JSON.parse(localStorage.getItem("users"));
+        const userRecord = users.find(
+          user =>
+            user.email === userData.email && user.password === userData.password
+        );
+        if (!userRecord)
+          return reject(new Error("Provided incorrect sign in data!"));
+
+        Token.create(userData)
+          .then(token => resolve(token))
+          .catch(error => reject(error));
+      });
+    };
+  })();
 
   const User = new (function() {
     this.hasAdministrativePermissions = () => {
@@ -216,6 +225,23 @@ const FakeApi = (() => {
 
         if (!userData) reject(new Error("There is no user data"));
         resolve(userData);
+      });
+    };
+    this.changeUserPassword = () => {
+      return newPromise((resolve, reject) => {
+        console.log(localStorage.getItem("users"));
+
+        const usersPassword = JSON.parse(localStorage.getItem("users"));
+
+        /* const usersNewPassword = usersPassword.map(function(item) {
+          console.log(item.password, "User Password");
+          resolve(usersNewPassword);
+        });*/
+
+        const userTakePassword = usersPassword.map(function(item) {
+          return item.password;
+        });
+        console.log("usertakePassword", userTakePassword);
       });
     };
   })();

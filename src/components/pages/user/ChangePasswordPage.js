@@ -1,40 +1,73 @@
 import React from "react";
 
-const ChangePasswordForm = props => {
-  return (
-    <form className="form-change-password">
-      <Field
-        component="input"
-        name="currentPassword"
-        type="password"
-        placeholder="Current Password"
-        required="required"
-        className="form-control"
-      />
+import "./UserPage.css";
+//import { User, Token } from "../../../api/fakeApi";
+import Input from "../../common/Input/input";
+import Button from "../../common/Button/Button";
 
-      <Field
-        component="input"
-        name="newPassword"
-        type="password"
-        placeholder="New Password"
-        required="required"
-        className="form-control"
-      />
+class ChangePasswordPage extends React.Component {
+  constructor(props) {
+    super(props);
 
-      <Field
-        component="input"
-        name="newPasswordRepeated"
-        type="password"
-        placeholder="New Password Repeated"
-        required="required"
-        className="form-control"
-      />
+    this.state = {
+      currentPassword: "",
+      newPassword: ""
+    };
 
-      <Button type="submit" size="lg" block color="success">
-        Change Password
-      </Button>
-    </form>
-  );
-};
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onChangeCurrentPassword = this.onChangeCurrentPassword.bind(this);
+    this.onChangeNewPassword = this.onChangeNewPassword.bind(this);
+  }
 
-export default ChangePasswordForm;
+  getUserPassword() {
+    const users = JSON.parse(localStorage.getItem("users"));
+    const usersTakePassword = users.map(function(item) {
+      return item.password;
+    });
+
+    console.log(usersTakePassword, "usersTakePassword");
+  }
+
+  onChangeCurrentPassword(e) {
+    this.setState({ currentPassword: e.target.value });
+  }
+
+  onChangeNewPassword(e) {
+    this.setState({ newPassword: e.target.value });
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+  }
+
+  render() {
+    return (
+      <>
+        <Input
+          customClass="input-field"
+          inputType="text"
+          label="Enter your password"
+          name="currentPassword"
+          onChange={this.onChangeCurrentPassword}
+        ></Input>
+        <Input
+          customClass="input-field"
+          inputType="text"
+          label="Enter your new password"
+          name="newPassword"
+          onChange={this.onChangeNewPassword}
+        ></Input>
+
+        <Button
+          type="button"
+          className="btn sweep-to-right"
+          onClick={this.getUserPassword()}
+        >
+          Save
+        </Button>
+      </>
+    );
+  }
+}
+
+export default ChangePasswordPage;
