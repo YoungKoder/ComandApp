@@ -142,6 +142,8 @@ const FakeApi = (() => {
 
   const Auth = new function() {
 
+    const adminEmail = "admin@admin.com";
+
     /**
      * Initialize default users data if there is no in localStorage
      */
@@ -150,7 +152,7 @@ const FakeApi = (() => {
       if (!usersExist) {
         localStorage.setItem('users', JSON.stringify([
           {
-            email: "admin@admin.com",
+            email: adminEmail,
             password: "test123"
           },
           {
@@ -170,7 +172,9 @@ const FakeApi = (() => {
        
         users.push({email: userData.email, password: userData.password});
         localStorage.setItem('users', JSON.stringify(users));
-        delete userData.password;     
+
+        userData.role = userData.email === adminEmail ? "admin" : "reader";
+        delete userData.password;
    
         Token.create(userData)
         .then(token => resolve(token))
@@ -181,9 +185,13 @@ const FakeApi = (() => {
     this.signIn = userData => {
       return newPromise((resolve, reject) => {
         usersDataInit();
+
         const users = JSON.parse(localStorage.getItem('users'));
         const userRecord = users.find(user => user.email === userData.email && user.password === userData.password);
         if (!userRecord) return reject(new Error("Provided incorrect sign in data!"));
+
+        userData.role = userData.email === adminEmail ? "admin" : "reader"; 
+        delete userData.password;
 
         Token.create(userData)
           .then(token => resolve(token))
