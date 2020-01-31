@@ -8,7 +8,8 @@ export default function NewsItem({
         appendClassName,
         data,
         handleInputChange = () => {},
-        mediaControls,
+        hasAdministrativePermissions,
+        mediaControls = null,
         itemControls
     }) {
 
@@ -25,14 +26,16 @@ export default function NewsItem({
                            value={data.title} 
                            customClass={`${classes['news-item__title']} ${classes['font-size--medium']}`}
                            onChange={handleInputChange}
+                           disabled={!hasAdministrativePermissions}
                     />
                     <textarea className={`${classes['news-item__description']} ${classes['font-size--small']}`} 
                               name="description"
                               value={data.description}
-                              onChange={handleInputChange}>
+                              onChange={handleInputChange}
+                              disabled={!hasAdministrativePermissions}>
                     </textarea>
                     <div className={classes['news-item__media']}>
-                        <img className={classes['news-item__image']} src={data.image} />
+                        <img className={classes['news-item__image']} src={data.image} alt="er ego" />
                         {mediaControls}
                     </div>
                 </div>
@@ -48,6 +51,7 @@ NewsItem.propTypes = {
     appendClassName: PropTypes.string,
     data: PropTypes.objectOf(PropTypes.string).isRequired,
     handleInputChange: PropTypes.func,
+    hasAdministrativePermissions: PropTypes.bool.isRequired,
     mediaControls: PropTypes.oneOfType([
         PropTypes.element, 
         arrayOf(PropTypes.element)
@@ -55,5 +59,5 @@ NewsItem.propTypes = {
     itemControls: PropTypes.oneOfType([
         PropTypes.element, 
         arrayOf(PropTypes.element)
-    ]).isRequired
+    ])
 };
