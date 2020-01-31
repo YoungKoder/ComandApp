@@ -6,16 +6,6 @@ import Button from "../common/Button/Button";
 
 import {Auth} from "../../api/fakeApi"
 
-
-const emails = [
-  "user@mail.com",
-  "admin@admin.com"
-]
-
-const roles = [
-  "admin",
-  "reader"
-]
 export default class AuthSignup extends Component {
 
   constructor(props) {
@@ -113,23 +103,11 @@ export default class AuthSignup extends Component {
   }
 
   setUserData = () =>{
-    if(this.state.emailControl.value === emails[1]){
       this.setState({
         user: {
-          ...this.state.user,
           email:this.state.emailControl.value,
-          role:roles[0]
         }
       });
-    }else{
-      this.setState({
-        user: {
-          ...this.state.user,
-          email:this.state.emailControl.value,
-          role:roles[1]
-        }
-      })
-    }
   }
 
   signUp = (e) =>{
