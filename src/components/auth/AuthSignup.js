@@ -6,16 +6,6 @@ import Button from "../common/Button/Button";
 
 import {Auth} from "../../api/fakeApi"
 
-
-const emails = [
-  "user@mail.com",
-  "admin@admin.com"
-]
-
-const roles = [
-  "admin",
-  "reader"
-]
 export default class AuthSignup extends Component {
 
   constructor(props) {
@@ -39,6 +29,7 @@ export default class AuthSignup extends Component {
         isFirstPasswordControlHere: false
       },
       formValid: false,
+      formErrors:"",
       user:{
         email:"",
         role:""
@@ -112,30 +103,23 @@ export default class AuthSignup extends Component {
   }
 
   setUserData = () =>{
-    if(this.state.emailControl.value === emails[1]){
       this.setState({
         user: {
-          ...this.state.user,
           email:this.state.emailControl.value,
-          role:roles[0]
         }
       });
-    }else{
-      this.setState({
-        user: {
-          ...this.state.user,
-          email:this.state.emailControl.value,
-          role:roles[1]
-        }
-      })
-    }
   }
 
   signUp = (e) =>{
-    // console.log("user data", this.state.user)
-      Auth.signUp({email:this.state.user.email,role:this.state.user.role})
-        .then(token=> window.location.replace("/user"))
-        .catch(error => ()=>console.log("something went wrong"));
+      Auth.signUp({
+        email:this.state.user.email, 
+        password: this.state.firstPasswordControl.value, 
+        role:this.state.user.role
+      })
+      .then(token=> window.location.replace("/user"))
+      .catch(error => this.setState({
+        formErrors: error
+      }));
   }
 
   render(){
@@ -148,6 +132,13 @@ export default class AuthSignup extends Component {
 
     return (
       <Fragment>
+          {
+            this.state.formErrors ? 
+              <div className="errorMesege">
+                <p>{this.state.formErrors}</p>
+              </div>
+            : null
+          }
           <form className="form" onSubmit={this.submitHandler}>
             <Input label="Email" 
               inputType="email"  
