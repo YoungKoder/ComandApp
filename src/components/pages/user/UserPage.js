@@ -71,7 +71,6 @@ class UserPage extends React.Component {
     console.log(usersTakePassword, "usersTakePassword");
   }
 
-  changeuserPassword() {}
   componentDidMount() {
     this.getUserData();
   }

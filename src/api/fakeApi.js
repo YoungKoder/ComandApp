@@ -152,12 +152,10 @@ const FakeApi = (() => {
           "users",
           JSON.stringify([
             {
-              id: "1",
               email: "admin@admin.com",
               password: "test123"
             },
             {
-              id: "2",
               email: "test@gmail.com",
               password: "useruser"
             }

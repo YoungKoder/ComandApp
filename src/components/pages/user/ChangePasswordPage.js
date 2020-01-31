@@ -21,9 +21,7 @@ class ChangePasswordPage extends React.Component {
 
   getUserPassword() {
     const users = JSON.parse(localStorage.getItem("users"));
-    const usersTakePassword = users.map(function(item) {
-      return item.password;
-    });
+    const usersTakePassword = users.map(item => item);
 
     console.log(usersTakePassword, "usersTakePassword");
   }
