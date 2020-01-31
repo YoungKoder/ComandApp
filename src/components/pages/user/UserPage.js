@@ -24,6 +24,7 @@ class UserPage extends React.Component {
 
     this.state = {
       isOpen: false,
+      isOpenSecond: false,
       componentIsLoading: true,
       user: {
         name: "",
@@ -240,10 +241,18 @@ class UserPage extends React.Component {
                     className="btn sweep-to-right"
                     onClick={() => {
                       User.saveToLocalStorage(this.state.user);
+                      this.setState({ isOpenSecond: true });
                     }}
                   >
                     Save
                   </Button>
+                  <Modal
+                    isOpen={this.state.isOpenSecond}
+                    onClose={e => this.setState({ isOpenSecond: false })}
+                    modalContent={
+                      <div className="data-sended">Your data was saved</div>
+                    }
+                  ></Modal>
                 </form>
               )}
             </div>
