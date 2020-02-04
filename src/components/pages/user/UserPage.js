@@ -6,24 +6,23 @@ import Input from "../../common/Input/input";
 import Button from "../../common/Button/Button";
 import Navbar from "../../layout/navbar/Navbar";
 import Sidebar from "../../layout/sidebar/Sidebar";
-
+//import ChangePasswordPage from "./ChangePasswordPage";
 import { User, Token } from "../../../api/fakeApi";
+//import { func } from "prop-types";
 
 class UserPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.onChangeName = this.onChangeName.bind(this);
-    this.onChangeLastName = this.onChangeLastName.bind(this);
-    this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangeAge = this.onChangeAge.bind(this);
-    this.onChangeGender = this.onChangeGender.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
-    this.onChangeInitialPassword = this.onChangeInitialPassword.bind(this);
+
+    this.onChangeForm = this.onChangeForm.bind(this);
+
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
       isOpen: false,
+      isOpenSecond: false,
       componentIsLoading: true,
       user: {
         name: "",
@@ -31,52 +30,114 @@ class UserPage extends React.Component {
         email: "",
         age: "",
         gender: "",
-        password: "",
-        initialPassword: "useruser"
-      }
+        initialPassword: "",
+        password: ""
+      },
+      currentPassword: {
+        //value: "",
+        errorMessege: "",
+        valid: false
+      },
+      passwordControl: {
+        value: "",
+        valid: false,
+        errorMessege: ""
+      },
+      formErrors: "",
+      formValid: false
     };
-
-    //const { isOpen, user:{...user} } = this.state;
   }
 
   //Form Events
 
-  onChangeName(e) {
-    this.setState({
-      user: Object.assign(this.state.user, { name: e.target.value })
-    });
+  onChangeForm(e) {
+    const value = e.target.value;
+    const name = e.target.name;
+
+    this.setState(prevState => ({
+      ...prevState,
+      user: {
+        ...prevState.user,
+        [name]: value
+      }
+    }));
   }
 
-  onChangeLastName(e) {
-    this.setState({
-      user: Object.assign(this.state.user, { lastname: e.target.value })
-    });
+  changeHandler = async e => {
+    const state = { ...this.state };
+    const name = e.target.name;
+    const value = e.target.value;
+
+    this.setState(
+      {
+        ...state,
+        [name]: { ...state[name], value: value }
+      },
+      () => this.validateControl(name, value)
+    );
+  };
+
+  validateControl(controlName, value) {
+    const { initialPassword } = this.state.user;
+    let currentPasswordValid = this.state.currentPassword.valid;
+
+    console.log(initialPassword, "currentPassword");
+    let firstPswValid = this.state.passwordControl.valid;
+
+    switch (controlName) {
+      case "currentPassword":
+        currentPasswordValid = initialPassword;
+        this.state.currentPassword.errorMessege = currentPasswordValid
+          ? !currentPasswordValid
+          : "Enter your current password!";
+        break;
+      case "passwordControl":
+        firstPswValid = value.length >= 6;
+        this.state.passwordControl.errorMessege = firstPswValid
+          ? null
+          : "Password must contains 6 symbols at least";
+        break;
+      default:
+        break;
+    }
+
+    this.setState(
+      {
+        passwordControl: {
+          ...this.state.passwordControl,
+          valid: firstPswValid
+        },
+        currentPassword: {
+          ...this.state.currentPassword,
+          valid: currentPasswordValid
+        }
+      },
+      this.formValidate
+    );
   }
-  onChangeEmail(e) {
+
+  formValidate = () => {
+    this.setState(
+      {
+        formValid:
+          this.state.passwordControl.valid && this.state.currentPassword.valid
+      },
+      this.setUserData
+    );
+  };
+
+  setUserData = () => {
     this.setState({
-      user: Object.assign(this.state.user, { email: e.target.value })
+      user: {
+        ...this.state.user,
+        password: this.state.passwordControl.value,
+        initialPassword: this.state.currentPassword.value
+      }
     });
-  }
+  };
   onChangeAge(e) {
     this.setState({
       user: Object.assign(this.state.user, { age: e.target.value })
-    });
-  }
-  onChangePassword(e) {
-    this.setState({
-      user: Object.assign(this.state.user, { password: e.target.value })
-    });
-  }
-
-  onChangeInitialPassword(e) {
-    this.setState({
-      user: Object.assign(this.state.user, { initialPassword: e.target.value })
-    });
-  }
-
-  onChangeGender(e) {
-    this.setState({
-      user: Object.assign(this.state.user, { gender: e.target.value })
     });
   }
 
@@ -84,38 +145,28 @@ class UserPage extends React.Component {
     Promise.all([Token.decode(), User.getUserData()])
       .then(result => {
         const { email } = result[0];
-        console.log("email", email);
-        const userAdditionalData = result[1];
-        this.setState(
-          {
-            user: Object.assign(
-              { email },
-              Object.assign(
-                { initialPassword: userAdditionalData.password },
-                userAdditionalData
-              )
-            )
-          },
-          () => console.log("this is state", this.state)
-        );
+        const { password } = result[1];
+        const { gender } = result[1];
+        const { name } = result[1];
+        const { lastname } = result[1];
+        const { age } = result[1];
+        this.setState({
+          user: {
+            ...this.state.user,
+            email,
+            password,
+            initialPassword: password,
+            gender: gender || "",
+            name: name || "",
+            lastname: lastname || "",
+            age: age || ""
+          }
+        });
       })
       .catch(error => console.log(error))
       .finally(() => this.setState({ componentIsLoading: false }));
-
-    /*User.getUserData()
-      .then(userData => {
-        this.setState(
-          {
-            userData
-          },
-          () => console.log("This state", this.state)
-        );
-      })
-      .catch(error => console.error(error))
-      .finally(() => this.setState({ componentIsLoading: false }));
-
-      */
   }
+
   componentDidMount() {
     this.getUserData();
   }
@@ -124,7 +175,15 @@ class UserPage extends React.Component {
     e.preventDefault();
   }
 
+  validate() {
+    console.log();
+  }
+
   render() {
+    const {
+      passwordControl: { ...passwordControl },
+      currentPassword: { ...currentPassword }
+    } = this.state;
     return (
       <React.Fragment>
         <Navbar></Navbar>
@@ -142,7 +201,7 @@ class UserPage extends React.Component {
                     name="name"
                     label="First Name"
                     inputType="text"
-                    onChange={this.onChangeName}
+                    onChange={this.onChangeForm}
                     value={this.state.user.name}
                   ></Input>
                   <Input
@@ -150,7 +209,7 @@ class UserPage extends React.Component {
                     name="lastname"
                     label="Last Name"
                     inputType="text"
-                    onChange={this.onChangeLastName}
+                    onChange={this.onChangeForm}
                     value={this.state.user.lastname}
                   ></Input>
                   <Input
@@ -159,7 +218,7 @@ class UserPage extends React.Component {
                     label="Email"
                     inputType="email"
                     value={this.state.user.email}
-                    onChange={this.onChangeEmail}
+                    onChange={this.onChangeForm}
                     disabled
                   ></Input>
                   <Input
@@ -178,7 +237,7 @@ class UserPage extends React.Component {
                         name="gender"
                         value="male"
                         checked={this.state.user.gender === "male"}
-                        onChange={this.onChangeGender}
+                        onChange={this.onChangeForm}
                       />
                     </div>
                     <div className="userGender_female">
@@ -188,7 +247,7 @@ class UserPage extends React.Component {
                         name="gender"
                         value="female"
                         checked={this.state.user.gender === "female"}
-                        onChange={this.onChangeGender}
+                        onChange={this.onChangeForm}
                       />
                     </div>
                   </div>
@@ -200,60 +259,76 @@ class UserPage extends React.Component {
                     Change password
                   </Button>
 
-                  <Modal
-                    isOpen={this.state.isOpen}
-                    onClose={e => this.setState({ isOpen: false })}
-                    modalContent={
-                      <div>
-                        <Input
-                          customClass="input-field"
-                          inputType="text"
-                          label="Enter your password"
-                          name="initialPassword"
-                          onChange={this.onChangeInitialPassword}
-                          value={this.state.user.initialPassword}
-                        ></Input>
-                        <Input
-                          customClass="input-field"
-                          inputType="text"
-                          label="Enter your new password"
-                          name="password"
-                          onChange={this.onChangePassword}
-                          value={this.state.user.password}
-                        ></Input>
-
-                        <Button
-                          type="button"
-                          className="btn sweep-to-right"
-                          onClick={() => {
-                            User.saveToLocalStorage(this.state.user);
-                          }}
-                        >
-                          Save
-                        </Button>
-                      </div>
-                    }
-                  ></Modal>
-
                   <Button
                     type="button"
                     className="btn sweep-to-right"
                     onClick={() => {
                       User.saveToLocalStorage(this.state.user);
+                      this.setState({ isOpenSecond: true });
                     }}
                   >
                     Save
                   </Button>
+                  <Modal
+                    isOpen={this.state.isOpenSecond}
+                    onClose={e => this.setState({ isOpenSecond: false })}
+                    modalContent={
+                      <div className="data-sended">Your data was saved</div>
+                    }
+                  ></Modal>
                 </form>
               )}
             </div>
           </div>
+          <Modal
+            isOpen={this.state.isOpen}
+            onClose={e => this.setState({ isOpen: false })}
+            modalContent={
+              <div>
+                {this.state.formErrors ? (
+                  <div className="errorMesege">
+                    <p>{this.state.formErrors}</p>
+                  </div>
+                ) : null}
+                <form onSubmit={this.onSubmit}>
+                  <Input
+                    customClass="input-field"
+                    inputType="password"
+                    label="Enter your current password"
+                    name="currentPassword"
+                    onChange={this.changeHandler}
+                    valid={currentPassword.valid}
+                    errorMessege={currentPassword.errorMessege}
+                  ></Input>
+                  <Input
+                    template="stack"
+                    customClass="input-field"
+                    inputType="password"
+                    label="Enter your new password"
+                    name="passwordControl"
+                    onChange={this.changeHandler}
+                    valid={passwordControl.valid}
+                    errorMessege={passwordControl.errorMessege}
+                  ></Input>
+
+                  <Button
+                    type="submit"
+                    className="btn sweep-to-right"
+                    state="success"
+                    variant="solid"
+                    disabled={!this.state.formValid}
+                    onClick={() => User.saveToLocalStorage(this.state.user)}
+                  >
+                    Save
+                  </Button>
+                </form>
+              </div>
+            }
+          ></Modal>
         </div>
       </React.Fragment>
     );
   }
 }
-
-/*comment for git */
 
 export default UserPage;

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { func } from "prop-types";
 
 /**
  * Initialize fakeApi as a global variable
@@ -140,57 +141,42 @@ const FakeApi = (() => {
     };
   })();
 
-  const Auth = new function() {
-
+  const Auth = new (function() {
     const adminEmail = "admin@admin.com";
 
     /**
      * Initialize default users data if there is no in localStorage
      */
     const usersDataInit = () => {
-      const usersExist = Boolean(localStorage.getItem('users'));
+      const usersExist = Boolean(localStorage.getItem("users"));
       if (!usersExist) {
-        localStorage.setItem('users', JSON.stringify([
-          {
-            email: adminEmail,
-            password: "test123"
-          },
-          {
-            email: "test@gmail.com",
-            password: "useruser"
-          }
-        ]));
+        localStorage.setItem(
+          "users",
+          JSON.stringify([
+            {
+              email: adminEmail,
+              password: "test123"
+            },
+            {
+              email: "test@gmail.com",
+              password: "useruser"
+            }
+          ])
+        );
       }
-    }
+    };
 
     this.signUp = userData => {
       return newPromise((resolve, reject) => {
         usersDataInit();
-        const users = JSON.parse(localStorage.getItem('users'));
+        const users = JSON.parse(localStorage.getItem("users"));
         const userExists = users.find(user => user.email === userData.email);
         if (userExists) return reject(new Error("This email already in use"));
-       
-        users.push({email: userData.email, password: userData.password});
-        localStorage.setItem('users', JSON.stringify(users));
+
+        users.push({ email: userData.email, password: userData.password });
+        localStorage.setItem("users", JSON.stringify(users));
 
         userData.role = userData.email === adminEmail ? "admin" : "reader";
-        delete userData.password;
-   
-        Token.create(userData)
-        .then(token => resolve(token))
-        .catch(error => reject(error));
-      });
-    };
-    
-    this.signIn = userData => {
-      return newPromise((resolve, reject) => {
-        usersDataInit();
-
-        const users = JSON.parse(localStorage.getItem('users'));
-        const userRecord = users.find(user => user.email === userData.email && user.password === userData.password);
-        if (!userRecord) return reject(new Error("Provided incorrect sign in data!"));
-
-        userData.role = userData.email === adminEmail ? "admin" : "reader"; 
         delete userData.password;
 
         Token.create(userData)
@@ -198,7 +184,28 @@ const FakeApi = (() => {
           .catch(error => reject(error));
       });
     };
-  };
+
+    this.signIn = userData => {
+      return newPromise((resolve, reject) => {
+        usersDataInit();
+
+        const users = JSON.parse(localStorage.getItem("users"));
+        const userRecord = users.find(
+          user =>
+            user.email === userData.email && user.password === userData.password
+        );
+        if (!userRecord)
+          return reject(new Error("Provided incorrect sign in data!"));
+
+        userData.role = userData.email === adminEmail ? "admin" : "reader";
+        delete userData.password;
+
+        Token.create(userData)
+          .then(token => resolve(token))
+          .catch(error => reject(error));
+      });
+    };
+  })();
 
   const User = new (function() {
     this.hasAdministrativePermissions = () => {
@@ -213,17 +220,43 @@ const FakeApi = (() => {
 
     this.saveToLocalStorage = userData => {
       return newPromise((resolve, reject) => {
-        localStorage.setItem("user", JSON.stringify(userData));
+        const users = JSON.parse(localStorage.getItem("users"));
+
+        delete userData.initialPassword;
+
+        const userIndex = users.findIndex(
+          user => user.email === userData.email
+        );
+
+        if (!~userIndex) return reject("There is no user with such email!");
+        users[userIndex] = userData;
+
+        localStorage.setItem("users", JSON.stringify(users));
         resolve(true);
       });
     };
     this.getUserData = () => {
       return newPromise((resolve, reject) => {
-        console.log(localStorage.getItem("user"));
+        const users = JSON.parse(localStorage.getItem("users"));
+        console.log(users, "users");
+        Token.decode()
+          .then(decoded => {
+            const user = users.find(user => user.email === decoded.email);
+
+            console.log(user, "user");
+            resolve(user);
+          })
+
+          .catch(error => reject(error));
+        /*
+          .then((decoded => decoded.email)
+          .catch(error => reject(error));
+        //  console.log(localStorage.getItem("user"));
         const userData = JSON.parse(localStorage.getItem("user") || "{}");
 
         if (!userData) reject(new Error("There is no user data"));
         resolve(userData);
+      });*/
       });
     };
   })();
