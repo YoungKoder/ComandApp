@@ -259,6 +259,22 @@ const FakeApi = (() => {
       });*/
       });
     };
+
+    this.setNewPassword = (newPassword) => {
+      return newPromise((resolve, reject) => {
+        const users = JSON.parse(localStorage.getItem("users"));
+
+        Token.decode()
+        .then(decoded => {
+          const userIndex = users.findIndex(user => user.email === decoded.email);
+          if (!~userIndex) return reject(new Error("There is no user with such email!"));
+          
+          users[userIndex].password = newPassword;
+          localStorage.setItem("users", JSON.stringify(users));
+          resolve(true);
+        });
+      });
+    };
   })();
 
   const News = new (function() {
