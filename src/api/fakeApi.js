@@ -366,7 +366,65 @@ const FakeApi = (() => {
     };
   })();
 
-  const Events = new (function() {})();
+  const Events = new (function() {
+   
+    this.add = (
+      eventsItemData = {
+          id:"",
+        title: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        allDayEvent: false,
+  
+      }
+    ) => {
+      return newPromise((resolve, reject) => {
+        Token.verify()
+          .then(decoded => {
+            
+            const eventsItemId = Date.now();
+            const eventsItem = { ["/"+`${eventsItemId}`+"/"]: eventsItemData };
+            const events = Object.assign(
+              JSON.parse(localStorage.getItem("events") || "{}"),
+              eventsItem
+            );
+            localStorage.setItem("events", JSON.stringify(events));
+            resolve(events);
+            console.log("ADDED")
+          })
+          .catch(error => reject(error));
+      });
+    };
+    this.get = (eventsItemId = "") => {
+      return newPromise((resolve, reject) => {
+        Token.verify()
+          .then(decoded => {
+            const newsJsonString = localStorage.getItem("events");
+            const news = JSON.parse(newsJsonString);
+            if (eventsItemId) {
+              if (!news) reject(new Error("There is no news!"));
+              if (!news[eventsItemId])
+                reject(new Error("There is no news with such id!"));
+              resolve(news[eventsItemId]);
+            
+              
+            }
+            console.log(news)
+            resolve(news);
+            
+          })
+          .catch(error => reject(error));
+      });
+    };
+  })();
+    /**
+     * Get all or particular news
+     * @param {String} eventsItemId Id of news item to fetch
+     * @returns {Promise}
+     */
+    
+  
 
   /**
    * Return public instances
