@@ -17,6 +17,7 @@ class UserPage extends React.Component {
     this.onChangeAge = this.onChangeAge.bind(this);
 
     this.onChangeForm = this.onChangeForm.bind(this);
+    this.setNewPassword = this.setNewPassword.bind(this);
 
     this.onSubmit = this.onSubmit.bind(this);
 
@@ -30,11 +31,10 @@ class UserPage extends React.Component {
         email: "",
         age: "",
         gender: "",
-        initialPassword: "",
-        password: ""
+        initialPassword: ""
       },
       currentPassword: {
-        //value: "",
+        value: "",
         errorMessege: "",
         valid: false
       },
@@ -67,30 +67,59 @@ class UserPage extends React.Component {
     const state = { ...this.state };
     const name = e.target.name;
     const value = e.target.value;
-
+    console.log("changing ", name);
     this.setState(
       {
         ...state,
         [name]: { ...state[name], value: value }
       },
-      () => this.validateControl(name, value)
+      // () => {
+      //   console.log("initial", this.state.user);
+      //   console.log("current", this.state.currentPassword.value);
+      // }
+      () => {
+        console.log("current", this.state.currentPassword.value);
+        this.validateControl(name, value);
+      }
     );
   };
 
   validateControl(controlName, value) {
-    const { initialPassword } = this.state.user;
+    /*  const { initialPassword } = this.state.user;
     let currentPasswordValid = this.state.currentPassword.valid;
-
-    console.log(initialPassword, "currentPassword");
+    let currentPasswordValue = this.state.currentPassword.value;
+    console.log("this state is ", this.state);
+    // console.log(initialPassword, "currentPassword");*/
     let firstPswValid = this.state.passwordControl.valid;
 
     switch (controlName) {
-      case "currentPassword":
-        currentPasswordValid = initialPassword;
+      /*  case "currentPassword":
+        if (currentPasswordValue == initialPassword) {
+          this.setState(
+            {
+              currentPassword: {
+                ...this.state.currentPassword,
+                valid: true
+              }
+            },
+            () => console.log(currentPasswordValid)
+          );
+        } else {
+          this.setState(
+            {
+              currentPassword: {
+                ...this.state.currentPassword,
+                valid: false
+              }
+            },
+            () => console.log(currentPasswordValid)
+          );
+        }
+
         this.state.currentPassword.errorMessege = currentPasswordValid
-          ? !currentPasswordValid
+          ? null
           : "Enter your current password!";
-        break;
+        break;*/
       case "passwordControl":
         firstPswValid = value.length >= 6;
         this.state.passwordControl.errorMessege = firstPswValid
@@ -106,10 +135,6 @@ class UserPage extends React.Component {
         passwordControl: {
           ...this.state.passwordControl,
           valid: firstPswValid
-        },
-        currentPassword: {
-          ...this.state.currentPassword,
-          valid: currentPasswordValid
         }
       },
       this.formValidate
@@ -119,8 +144,7 @@ class UserPage extends React.Component {
   formValidate = () => {
     this.setState(
       {
-        formValid:
-          this.state.passwordControl.valid && this.state.currentPassword.valid
+        formValid: this.state.passwordControl.valid
       },
       this.setUserData
     );
@@ -130,8 +154,8 @@ class UserPage extends React.Component {
     this.setState({
       user: {
         ...this.state.user,
-        password: this.state.passwordControl.value,
-        initialPassword: this.state.currentPassword.value
+        password: this.state.passwordControl.value
+        // initialPassword: this.state.currentPassword.value
       }
     });
   };
@@ -154,7 +178,6 @@ class UserPage extends React.Component {
           user: {
             ...this.state.user,
             email,
-            password,
             initialPassword: password,
             gender: gender || "",
             name: name || "",
@@ -165,6 +188,16 @@ class UserPage extends React.Component {
       })
       .catch(error => console.log(error))
       .finally(() => this.setState({ componentIsLoading: false }));
+  }
+
+  setNewPassword() {
+    if (this.state.user.initialPassword !== this.state.currentPassword.value) {
+      alert("Current password is wrong!");
+    } else {
+      User.setNewPassword(this.state.passwordControl.value)
+        .then(success => alert("Your password has been changed successful!"))
+        .catch(err => console.error(err));
+    }
   }
 
   componentDidMount() {
@@ -317,7 +350,7 @@ class UserPage extends React.Component {
                     state="success"
                     variant="solid"
                     disabled={!this.state.formValid}
-                    onClick={() => User.saveToLocalStorage(this.state.user)}
+                    onClick={this.setNewPassword}
                   >
                     Save
                   </Button>

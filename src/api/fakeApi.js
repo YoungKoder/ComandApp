@@ -219,6 +219,7 @@ const FakeApi = (() => {
     };
 
     this.saveToLocalStorage = userData => {
+      console.log("received ", userData);
       return newPromise((resolve, reject) => {
         const users = JSON.parse(localStorage.getItem("users"));
 
