@@ -4,6 +4,7 @@ import "./UserPage.css";
 //import { User, Token } from "../../../api/fakeApi";
 import Input from "../../common/Input/input";
 import Button from "../../common/Button/Button";
+import { User, Token } from "../../../api/fakeApi";
 
 class ChangePasswordPage extends React.Component {
   constructor(props) {
@@ -19,13 +20,6 @@ class ChangePasswordPage extends React.Component {
     this.onChangeNewPassword = this.onChangeNewPassword.bind(this);
   }
 
-  getUserPassword() {
-    const users = JSON.parse(localStorage.getItem("users"));
-    const usersTakePassword = users.map(item => item);
-
-    console.log(usersTakePassword, "usersTakePassword");
-  }
-
   onChangeCurrentPassword(e) {
     this.setState({ currentPassword: e.target.value });
   }
@@ -36,6 +30,20 @@ class ChangePasswordPage extends React.Component {
 
   onSubmit(e) {
     e.preventDefault();
+  }
+
+  getUserData() {
+    Promise.all([Token.decode(), User.getUserData()])
+      .then(result => {
+        const currentUserPassword = result[1].password;
+        console.log(currentUserPassword, "currentUserPassword");
+      })
+      .catch(error => console.log(error))
+      .finally(() => this.setState({ componentIsLoading: false }));
+  }
+
+  componentDidMount() {
+    this.getUserData();
   }
 
   render() {
@@ -59,7 +67,7 @@ class ChangePasswordPage extends React.Component {
         <Button
           type="button"
           className="btn sweep-to-right"
-          onClick={this.getUserPassword()}
+          onClick={this.getUserData()}
         >
           Save
         </Button>

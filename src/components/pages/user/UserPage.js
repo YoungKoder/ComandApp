@@ -6,15 +6,18 @@ import Input from "../../common/Input/input";
 import Button from "../../common/Button/Button";
 import Navbar from "../../layout/navbar/Navbar";
 import Sidebar from "../../layout/sidebar/Sidebar";
-import ChangePasswordPage from "./ChangePasswordPage";
+//import ChangePasswordPage from "./ChangePasswordPage";
 import { User, Token } from "../../../api/fakeApi";
-import { func } from "prop-types";
+//import { func } from "prop-types";
 
 class UserPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.onChangeUserData = this.onChangeUserData.bind(this);
+    this.onChangeAge = this.onChangeAge.bind(this);
+
+    this.onChangeForm = this.onChangeForm.bind(this);
+
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
@@ -26,18 +29,31 @@ class UserPage extends React.Component {
         lastname: "",
         email: "",
         age: "",
-        gender: ""
-      }
+        gender: "",
+        initialPassword: "",
+        password: ""
+      },
+      currentPassword: {
+        //value: "",
+        errorMessege: "",
+        valid: false
+      },
+      passwordControl: {
+        value: "",
+        valid: false,
+        errorMessege: ""
+      },
+      formErrors: "",
+      formValid: false
     };
-
-    //const { isOpen, user:{...user} } = this.state;
   }
 
   //Form Events
 
-  onChangeUserData(e) {
+  onChangeForm(e) {
     const value = e.target.value;
     const name = e.target.name;
+
     this.setState(prevState => ({
       ...prevState,
       user: {
@@ -47,28 +63,108 @@ class UserPage extends React.Component {
     }));
   }
 
+  changeHandler = async e => {
+    const state = { ...this.state };
+    const name = e.target.name;
+    const value = e.target.value;
+
+    this.setState(
+      {
+        ...state,
+        [name]: { ...state[name], value: value }
+      },
+      () => this.validateControl(name, value)
+    );
+  };
+
+  validateControl(controlName, value) {
+    const { initialPassword } = this.state.user;
+    let currentPasswordValid = this.state.currentPassword.valid;
+
+    console.log(initialPassword, "currentPassword");
+    let firstPswValid = this.state.passwordControl.valid;
+
+    switch (controlName) {
+      case "currentPassword":
+        currentPasswordValid = initialPassword;
+        this.state.currentPassword.errorMessege = currentPasswordValid
+          ? !currentPasswordValid
+          : "Enter your current password!";
+        break;
+      case "passwordControl":
+        firstPswValid = value.length >= 6;
+        this.state.passwordControl.errorMessege = firstPswValid
+          ? null
+          : "Password must contains 6 symbols at least";
+        break;
+      default:
+        break;
+    }
+
+    this.setState(
+      {
+        passwordControl: {
+          ...this.state.passwordControl,
+          valid: firstPswValid
+        },
+        currentPassword: {
+          ...this.state.currentPassword,
+          valid: currentPasswordValid
+        }
+      },
+      this.formValidate
+    );
+  }
+
+  formValidate = () => {
+    this.setState(
+      {
+        formValid:
+          this.state.passwordControl.valid && this.state.currentPassword.valid
+      },
+      this.setUserData
+    );
+  };
+
+  setUserData = () => {
+    this.setState({
+      user: {
+        ...this.state.user,
+        password: this.state.passwordControl.value,
+        initialPassword: this.state.currentPassword.value
+      }
+    });
+  };
+  onChangeAge(e) {
+    this.setState({
+      user: Object.assign(this.state.user, { age: e.target.value })
+    });
+  }
+
   getUserData() {
     Promise.all([Token.decode(), User.getUserData()])
       .then(result => {
         const { email } = result[0];
-        console.log("email", email);
-        this.setState(
-          {
-            user: Object.assign({ email })
-          },
-          () => console.log("this is state", this.state)
-        );
+        const { password } = result[1];
+        const { gender } = result[1];
+        const { name } = result[1];
+        const { lastname } = result[1];
+        const { age } = result[1];
+        this.setState({
+          user: {
+            ...this.state.user,
+            email,
+            password,
+            initialPassword: password,
+            gender: gender || "",
+            name: name || "",
+            lastname: lastname || "",
+            age: age || ""
+          }
+        });
       })
       .catch(error => console.log(error))
       .finally(() => this.setState({ componentIsLoading: false }));
-  }
-
-  getUserPassword() {
-    const users = JSON.parse(localStorage.getItem("users"));
-    const usersTakePassword = users.map(function(item) {
-      return item.id;
-    });
-    console.log(usersTakePassword, "usersTakePassword");
   }
 
   componentDidMount() {
@@ -79,7 +175,15 @@ class UserPage extends React.Component {
     e.preventDefault();
   }
 
+  validate() {
+    console.log();
+  }
+
   render() {
+    const {
+      passwordControl: { ...passwordControl },
+      currentPassword: { ...currentPassword }
+    } = this.state;
     return (
       <React.Fragment>
         <Navbar></Navbar>
@@ -97,7 +201,7 @@ class UserPage extends React.Component {
                     name="name"
                     label="First Name"
                     inputType="text"
-                    onChange={this.onChangeUserData}
+                    onChange={this.onChangeForm}
                     value={this.state.user.name}
                   ></Input>
                   <Input
@@ -105,7 +209,7 @@ class UserPage extends React.Component {
                     name="lastname"
                     label="Last Name"
                     inputType="text"
-                    onChange={this.onChangeUserData}
+                    onChange={this.onChangeForm}
                     value={this.state.user.lastname}
                   ></Input>
                   <Input
@@ -113,16 +217,15 @@ class UserPage extends React.Component {
                     name="email"
                     label="Email"
                     inputType="email"
-                    onChange={this.onChangeUserData}
                     value={this.state.user.email}
+                    onChange={this.onChangeForm}
                     disabled
                   ></Input>
                   <Input
-                    name="age"
                     customClass="input-field"
                     label="Age"
                     inputType="number"
-                    onChange={this.onChangeUserData}
+                    onChange={this.onChangeAge}
                     value={this.state.user.age}
                   ></Input>
 
@@ -134,7 +237,7 @@ class UserPage extends React.Component {
                         name="gender"
                         value="male"
                         checked={this.state.user.gender === "male"}
-                        onChange={this.onChangeUserData}
+                        onChange={this.onChangeForm}
                       />
                     </div>
                     <div className="userGender_female">
@@ -144,7 +247,7 @@ class UserPage extends React.Component {
                         name="gender"
                         value="female"
                         checked={this.state.user.gender === "female"}
-                        onChange={this.onChangeUserData}
+                        onChange={this.onChangeForm}
                       />
                     </div>
                   </div>
@@ -155,12 +258,6 @@ class UserPage extends React.Component {
                   >
                     Change password
                   </Button>
-
-                  <Modal
-                    isOpen={this.state.isOpen}
-                    onClose={e => this.setState({ isOpen: false })}
-                    modalContent={<ChangePasswordPage></ChangePasswordPage>}
-                  ></Modal>
 
                   <Button
                     type="button"
@@ -183,12 +280,55 @@ class UserPage extends React.Component {
               )}
             </div>
           </div>
+          <Modal
+            isOpen={this.state.isOpen}
+            onClose={e => this.setState({ isOpen: false })}
+            modalContent={
+              <div>
+                {this.state.formErrors ? (
+                  <div className="errorMesege">
+                    <p>{this.state.formErrors}</p>
+                  </div>
+                ) : null}
+                <form onSubmit={this.onSubmit}>
+                  <Input
+                    customClass="input-field"
+                    inputType="password"
+                    label="Enter your current password"
+                    name="currentPassword"
+                    onChange={this.changeHandler}
+                    valid={currentPassword.valid}
+                    errorMessege={currentPassword.errorMessege}
+                  ></Input>
+                  <Input
+                    template="stack"
+                    customClass="input-field"
+                    inputType="password"
+                    label="Enter your new password"
+                    name="passwordControl"
+                    onChange={this.changeHandler}
+                    valid={passwordControl.valid}
+                    errorMessege={passwordControl.errorMessege}
+                  ></Input>
+
+                  <Button
+                    type="submit"
+                    className="btn sweep-to-right"
+                    state="success"
+                    variant="solid"
+                    disabled={!this.state.formValid}
+                    onClick={() => User.saveToLocalStorage(this.state.user)}
+                  >
+                    Save
+                  </Button>
+                </form>
+              </div>
+            }
+          ></Modal>
         </div>
       </React.Fragment>
     );
   }
 }
-
-/*comment for git */
 
 export default UserPage;

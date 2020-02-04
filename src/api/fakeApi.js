@@ -220,34 +220,43 @@ const FakeApi = (() => {
 
     this.saveToLocalStorage = userData => {
       return newPromise((resolve, reject) => {
-        localStorage.setItem("user", JSON.stringify(userData));
+        const users = JSON.parse(localStorage.getItem("users"));
+
+        delete userData.initialPassword;
+
+        const userIndex = users.findIndex(
+          user => user.email === userData.email
+        );
+
+        if (!~userIndex) return reject("There is no user with such email!");
+        users[userIndex] = userData;
+
+        localStorage.setItem("users", JSON.stringify(users));
         resolve(true);
       });
     };
     this.getUserData = () => {
       return newPromise((resolve, reject) => {
-        console.log(localStorage.getItem("user"));
+        const users = JSON.parse(localStorage.getItem("users"));
+        console.log(users, "users");
+        Token.decode()
+          .then(decoded => {
+            const user = users.find(user => user.email === decoded.email);
+
+            console.log(user, "user");
+            resolve(user);
+          })
+
+          .catch(error => reject(error));
+        /*
+          .then((decoded => decoded.email)
+          .catch(error => reject(error));
+        //  console.log(localStorage.getItem("user"));
         const userData = JSON.parse(localStorage.getItem("user") || "{}");
 
         if (!userData) reject(new Error("There is no user data"));
         resolve(userData);
-      });
-    };
-    this.changeUserPassword = () => {
-      return newPromise((resolve, reject) => {
-        console.log(localStorage.getItem("users"));
-
-        const usersPassword = JSON.parse(localStorage.getItem("users"));
-
-        /* const usersNewPassword = usersPassword.map(function(item) {
-          console.log(item.password, "User Password");
-          resolve(usersNewPassword);
-        });*/
-
-        const userTakePassword = usersPassword.map(function(item) {
-          return item.password;
-        });
-        console.log("usertakePassword", userTakePassword);
+      });*/
       });
     };
   })();
