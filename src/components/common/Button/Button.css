@@ -111,3 +111,10 @@
     padding: 15px 30px;
     font-size: 20px;
 }
+
+.noPadding.btn--sm{
+    padding:0px 0px;
+}
+.noPadding.btn--md{
+    padding:0 0;
+}

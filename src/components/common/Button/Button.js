@@ -28,7 +28,8 @@ const Button = ({
     state="primary", 
     size="md",
     variant="solid",
-    disabled
+    disabled,
+    noPadding
 }) => {
 
     let classesNames = '';
@@ -58,7 +59,8 @@ const Button = ({
     //     classesNames+= "  disabled"
     // }
 
-    classesNames += !disabled ? " "+null : " disabled";
+    classesNames += !disabled ? " " : " disabled";
+    classesNames += noPadding? " noPadding": " ";
 
     return(
         <button 
