@@ -73,10 +73,7 @@ class UserPage extends React.Component {
         ...state,
         [name]: { ...state[name], value: value }
       },
-      // () => {
-      //   console.log("initial", this.state.user);
-      //   console.log("current", this.state.currentPassword.value);
-      // }
+
       () => {
         console.log("current", this.state.currentPassword.value);
         this.validateControl(name, value);
@@ -85,41 +82,9 @@ class UserPage extends React.Component {
   };
 
   validateControl(controlName, value) {
-    /*  const { initialPassword } = this.state.user;
-    let currentPasswordValid = this.state.currentPassword.valid;
-    let currentPasswordValue = this.state.currentPassword.value;
-    console.log("this state is ", this.state);
-    // console.log(initialPassword, "currentPassword");*/
     let firstPswValid = this.state.passwordControl.valid;
 
     switch (controlName) {
-      /*  case "currentPassword":
-        if (currentPasswordValue == initialPassword) {
-          this.setState(
-            {
-              currentPassword: {
-                ...this.state.currentPassword,
-                valid: true
-              }
-            },
-            () => console.log(currentPasswordValid)
-          );
-        } else {
-          this.setState(
-            {
-              currentPassword: {
-                ...this.state.currentPassword,
-                valid: false
-              }
-            },
-            () => console.log(currentPasswordValid)
-          );
-        }
-
-        this.state.currentPassword.errorMessege = currentPasswordValid
-          ? null
-          : "Enter your current password!";
-        break;*/
       case "passwordControl":
         firstPswValid = value.length >= 6;
         this.state.passwordControl.errorMessege = firstPswValid
@@ -155,7 +120,6 @@ class UserPage extends React.Component {
       user: {
         ...this.state.user,
         password: this.state.passwordControl.value
-        // initialPassword: this.state.currentPassword.value
       }
     });
   };
@@ -191,6 +155,7 @@ class UserPage extends React.Component {
   }
 
   setNewPassword() {
+    console.log(this.state.user.initialPassword, "initialPassword");
     if (this.state.user.initialPassword !== this.state.currentPassword.value) {
       alert("Current password is wrong!");
     } else {
@@ -323,15 +288,13 @@ class UserPage extends React.Component {
                     <p>{this.state.formErrors}</p>
                   </div>
                 ) : null}
-                <form onSubmit={this.onSubmit}>
+                <form>
                   <Input
                     customClass="input-field"
                     inputType="password"
                     label="Enter your current password"
                     name="currentPassword"
                     onChange={this.changeHandler}
-                    valid={currentPassword.valid}
-                    errorMessege={currentPassword.errorMessege}
                   ></Input>
                   <Input
                     template="stack"
