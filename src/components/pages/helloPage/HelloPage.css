@@ -14,4 +14,12 @@
 .enterControl__buttonControls{
     padding:0 80px;
 }
+
+a{
+    display: block;
+}
+
+button a{
+    padding:10px 20px;
+}
 /*content*/

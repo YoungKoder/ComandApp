@@ -19,10 +19,11 @@ export default class HelloPage extends Component {
                         </div>
                         <div className="buttonControls enterControl__buttonControls">
                             <Button 
-                            variant="outline">
+                            variant="outline"
+                            noPadding>
                                 <Link to="/sign-in">Sign In</Link>
                             </Button>
-                            <Button><Link to="/sign-up">Sign Up</Link></Button>
+                            <Button noPadding><Link to="/sign-up">Sign Up</Link></Button>
                         </div>
                     </div>
                 </section>
