@@ -47,6 +47,7 @@ export default class NewsListPage extends React.Component {
     }
 
     render() {
+        console.log(localStorage)
         return (
             <>  
                 <div className={classes['news-list']}> 
