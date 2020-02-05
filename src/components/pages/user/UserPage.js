@@ -6,7 +6,6 @@ import Input from "../../common/Input/input";
 import Button from "../../common/Button/Button";
 import Navbar from "../../layout/navbar/Navbar";
 import Sidebar from "../../layout/sidebar/Sidebar";
-//import ChangePasswordPage from "./ChangePasswordPage";
 import { User, Token } from "../../../api/fakeApi";
 //import { func } from "prop-types";
 

@@ -223,7 +223,7 @@ const FakeApi = (() => {
       return newPromise((resolve, reject) => {
         const users = JSON.parse(localStorage.getItem("users"));
 
-        //delete userData.initialPassword;
+        delete userData.initialPassword;
 
         const userIndex = users.findIndex(
           user => user.email === userData.email

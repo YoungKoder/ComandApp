@@ -1,7 +1,7 @@
 import { User, Events } from "../../../../api/fakeApi";
 //const newsJsonString = localStorage.getItem("events1");
 //const news = JSON.parse(newsJsonString);1580780103413
-const arr = localStorage.getItem("events") || {};
+const arr = localStorage.getItem("events").split("/");
 const arr1 = [];
 //for (let key in localStorage.getItem("events7")){
 for (let i = 0; i <= arr.length; i++) {
