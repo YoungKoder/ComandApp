@@ -1,5 +1,4 @@
 import React from "react";
-//import { Link } from "react-router-dom";
 import Modal from "../../common/Modal/Modal";
 import "./UserPage.css";
 import Input from "../../common/Input/input";
@@ -7,7 +6,6 @@ import Button from "../../common/Button/Button";
 import Navbar from "../../layout/navbar/Navbar";
 import Sidebar from "../../layout/sidebar/Sidebar";
 import { User, Token } from "../../../api/fakeApi";
-//import { func } from "prop-types";
 
 class UserPage extends React.Component {
   constructor(props) {
@@ -29,8 +27,10 @@ class UserPage extends React.Component {
         lastname: "",
         email: "",
         age: "",
-        gender: "",
-        initialPassword: ""
+        gender: ""
+      },
+      initialPassword: {
+        value: ""
       },
       currentPassword: {
         value: "",
@@ -66,17 +66,13 @@ class UserPage extends React.Component {
     const state = { ...this.state };
     const name = e.target.name;
     const value = e.target.value;
-    console.log("changing ", name);
     this.setState(
       {
         ...state,
         [name]: { ...state[name], value: value }
       },
 
-      () => {
-        console.log("current", this.state.currentPassword.value);
-        this.validateControl(name, value);
-      }
+      () => this.validateControl(name, value)
     );
   };
 
@@ -141,12 +137,13 @@ class UserPage extends React.Component {
           user: {
             ...this.state.user,
             email,
-            initialPassword: password,
             gender: gender || "",
             name: name || "",
             lastname: lastname || "",
             age: age || ""
-          }
+          },
+
+          initialPassword: { value: password }
         });
       })
       .catch(error => console.log(error))
@@ -154,8 +151,7 @@ class UserPage extends React.Component {
   }
 
   setNewPassword() {
-    console.log(this.state.user.initialPassword, "initialPassword");
-    if (this.state.user.initialPassword !== this.state.currentPassword.value) {
+    if (this.state.initialPassword.value !== this.state.currentPassword.value) {
       alert("Current password is wrong!");
     } else {
       User.setNewPassword(this.state.passwordControl.value)
@@ -170,10 +166,6 @@ class UserPage extends React.Component {
 
   onSubmit(e) {
     e.preventDefault();
-  }
-
-  validate() {
-    console.log();
   }
 
   render() {
@@ -250,7 +242,7 @@ class UserPage extends React.Component {
                   </div>
 
                   <Button
-                    className="btn sweep-to-right"
+                    customClass="btn sweep-to-right"
                     onClick={e => this.setState({ isOpen: true })}
                   >
                     Change password
@@ -258,9 +250,12 @@ class UserPage extends React.Component {
 
                   <Button
                     type="button"
-                    className="btn sweep-to-right"
+                    customClass="btn sweep-to-right"
                     onClick={() => {
-                      User.saveToLocalStorage(this.state.user);
+                      User.saveToLocalStorage({
+                        ...this.state.user,
+                        password: this.state.initialPassword
+                      });
                       this.setState({ isOpenSecond: true });
                     }}
                   >
@@ -287,7 +282,7 @@ class UserPage extends React.Component {
                     <p>{this.state.formErrors}</p>
                   </div>
                 ) : null}
-                <form>
+                <form onSubmit={this.onSubmit}>
                   <Input
                     customClass="input-field"
                     inputType="password"
@@ -308,7 +303,7 @@ class UserPage extends React.Component {
 
                   <Button
                     type="submit"
-                    className="btn sweep-to-right"
+                    customClass="btn sweep-to-right"
                     state="success"
                     variant="solid"
                     disabled={!this.state.formValid}
