@@ -219,6 +219,7 @@ const FakeApi = (() => {
     };
 
     this.saveToLocalStorage = userData => {
+      console.log("received ", userData);
       return newPromise((resolve, reject) => {
         const users = JSON.parse(localStorage.getItem("users"));
 
@@ -260,16 +261,19 @@ const FakeApi = (() => {
       });
     };
 
-    this.setNewPassword = (newPassword) => {
+    this.setNewPassword = newPassword => {
       return newPromise((resolve, reject) => {
         const users = JSON.parse(localStorage.getItem("users"));
 
-        Token.decode()
-        .then(decoded => {
-          const userIndex = users.findIndex(user => user.email === decoded.email);
-          if (!~userIndex) return reject(new Error("There is no user with such email!"));
-          
+        Token.decode().then(decoded => {
+          const userIndex = users.findIndex(
+            user => user.email === decoded.email
+          );
+          if (!~userIndex)
+            return reject(new Error("There is no user with such email!"));
+
           users[userIndex].password = newPassword;
+          console.log(newPassword, "newPassword");
           localStorage.setItem("users", JSON.stringify(users));
           resolve(true);
         });
@@ -383,31 +387,30 @@ const FakeApi = (() => {
   })();
 
   const Events = new (function() {
-   
     this.add = (
       eventsItemData = {
-          id:"",
+        id: "",
         title: "",
         date: "",
         startTime: "",
         endTime: "",
-        allDayEvent: false,
-  
+        allDayEvent: false
       }
     ) => {
       return newPromise((resolve, reject) => {
         Token.verify()
           .then(decoded => {
-            
             const eventsItemId = Date.now();
-            const eventsItem = { ["/"+`${eventsItemId}`+"/"]: eventsItemData };
+            const eventsItem = {
+              ["/" + `${eventsItemId}` + "/"]: eventsItemData
+            };
             const events = Object.assign(
               JSON.parse(localStorage.getItem("events") || "{}"),
               eventsItem
             );
             localStorage.setItem("events", JSON.stringify(events));
             resolve(events);
-            console.log("ADDED")
+            console.log("ADDED");
           })
           .catch(error => reject(error));
       });
@@ -423,24 +426,19 @@ const FakeApi = (() => {
               if (!news[eventsItemId])
                 reject(new Error("There is no news with such id!"));
               resolve(news[eventsItemId]);
-            
-              
             }
-            console.log(news)
+            console.log(news);
             resolve(news);
-            
           })
           .catch(error => reject(error));
       });
     };
   })();
-    /**
-     * Get all or particular news
-     * @param {String} eventsItemId Id of news item to fetch
-     * @returns {Promise}
-     */
-    
-  
+  /**
+   * Get all or particular news
+   * @param {String} eventsItemId Id of news item to fetch
+   * @returns {Promise}
+   */
 
   /**
    * Return public instances
