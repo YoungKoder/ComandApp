@@ -223,7 +223,7 @@ const FakeApi = (() => {
       return newPromise((resolve, reject) => {
         const users = JSON.parse(localStorage.getItem("users"));
 
-        //delete userData.initialPassword;
+        delete userData.initialPassword;
 
         const userIndex = users.findIndex(
           user => user.email === userData.email
@@ -239,9 +239,12 @@ const FakeApi = (() => {
     this.getUserData = () => {
       return newPromise((resolve, reject) => {
         const users = JSON.parse(localStorage.getItem("users"));
+        console.log(users, "users");
         Token.decode()
           .then(decoded => {
             const user = users.find(user => user.email === decoded.email);
+
+            console.log(user, "user");
             resolve(user);
           })
 
