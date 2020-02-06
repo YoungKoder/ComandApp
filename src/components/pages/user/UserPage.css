@@ -50,7 +50,7 @@ input:not([type="radio"]) {
       }
       */
 
-.btn {
+.btn--user {
   background-color: transparent;
   border: 1px solid #5c6bc0;
   border-radius: 2px;
@@ -73,7 +73,7 @@ input:not([type="radio"]) {
   white-space: normal !important;
   word-wrap: break-word;
 }
-.btn:hover {
+.btn--user:hover {
   color: #fefefe;
   -webkit-box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18),
     0 4px 15px 0 rgba(0, 0, 0, 0.15);
