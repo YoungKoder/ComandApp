@@ -242,7 +242,7 @@ class UserPage extends React.Component {
                   </div>
 
                   <Button
-                    customClass="btn--user sweep-to-right"
+                    className="btn"
                     onClick={e => this.setState({ isOpen: true })}
                   >
                     Change password
@@ -250,7 +250,7 @@ class UserPage extends React.Component {
 
                   <Button
                     type="button"
-                    customClass="btn--user sweep-to-right"
+                    className="btn"
                     onClick={() => {
                       User.saveToLocalStorage({
                         ...this.state.user,
@@ -303,7 +303,7 @@ class UserPage extends React.Component {
 
                   <Button
                     type="submit"
-                    customClass="btn--user sweep-to-right"
+                    className="btn"
                     state="success"
                     variant="solid"
                     disabled={!this.state.formValid}
