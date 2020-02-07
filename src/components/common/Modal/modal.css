@@ -27,7 +27,8 @@
 
 .fade{
     background:rgba(117, 111, 122, .3);
-    animation: fadeIn 1s ease-in-out;
+    animation: fadeIn 1s ease-in-out ;
+    opacity: 1 !important;
 }
 
 .popup{
