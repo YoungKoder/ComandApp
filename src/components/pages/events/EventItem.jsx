@@ -55,7 +55,7 @@ componentDidMount() {
     render() {
         
         const {title,date,startTime,endTime,allDayEvent} = this.props.event;
-        console.log(this.state.hasAdministrativePermissions)
+       
       return (
         this.state.hasAdministrativePermissions?(
         this.state.isEdit === true ? 

@@ -25,7 +25,7 @@ componentDidMount() {
   this.init();
 }
     render() {
-      console.log(this.props)
+     
         let events = this.props.EventList;
         const trItem = events.map( (item,index) => <EventItem key={index} event={item} index={index} editEventSubmit={this.props.editEventSubmit} deleteEvent={this.props.deleteEvent}/>)
         const trItem1 = events.map( (item,index) => <EventItem key={index} event={item} index={index} editEventSubmit={this.props.editEventSubmit} deleteEvent={this.props.deleteEvent}/>)

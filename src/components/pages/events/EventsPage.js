@@ -55,7 +55,7 @@ componentDidMount() {
   this.init();
 }
   render() {
-    console.log(this.state)
+   
     return (
       <>
       <Navbar/>
@@ -73,7 +73,7 @@ componentDidMount() {
   <div className="card-body">
   <table className="table table-hover">
    
-         <thead className="thead-dark"><tr><th>Title</th><th>Date</th><th>Start Time</th> <th>End Time</th> <th>Full Day Event</th><th>Edit/Save</th><th>Delete</th></tr></thead>
+         <thead className="thead-dark"><tr><th>Title</th><th>Date</th><th>Start Time</th><th>End Time</th><th>Full Day Event</th><th>Edit/Save</th><th>Delete</th></tr></thead>
           <EventList deleteEvent={this.deleteEvent} EventList={this.props.eventList} editEventSubmit={this.editEventSubmit}/>
         </table>
         <Button className="btn btn-dark pull-left" onClick={this.addNewEvent}>Add New</Button>
@@ -81,7 +81,7 @@ componentDidMount() {
       :
       <table className="table table-hover">
   
-         <thead className="thead-dark"><tr><th>Title</th><th>Date</th><th>Start Time</th> <th>End Time</th> <th>Full Day Event</th></tr></thead>
+         <thead className="thead-dark"><tr><th>Title</th><th>Date</th><th>Start Time</th><th>End Time</th><th>Full Day Event</th></tr></thead>
           <EventList deleteEvent={this.deleteEvent} EventList={this.props.eventList} editEventSubmit={this.editEventSubmit}/>
         </table>
       
